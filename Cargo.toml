@@ -1,0 +1,25 @@
+[package]
+name = "godot-zx"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies.godot]
+git = "https://github.com/godot-rust/gdext"
+branch = "master"
+features = ["experimental-wasm", "lazy-function-tables"]
+
+[dependencies]
+rustzx-core = { version = "0.16.0", features = ["sound", "ay", "autoload", "embedded-roms", "full"] }
+rustzx-z80 = "0.16.0"
+
+[features]
+nothreads = ["godot/experimental-wasm-nothreads"]
+
+[profile.release]
+panic = "abort"
+opt-level = 3
+strip = true
+lto = true

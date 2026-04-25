@@ -1,0 +1,19 @@
+# Use the official Emscripten image as base
+FROM emscripten/emsdk:latest
+
+# Install system dependencies for bindgen
+RUN apt-get update && apt-get install -y clang libclang-dev gcc-multilib g++-multilib && rm -rf /var/lib/apt/lists/*
+
+# Install Rust Nightly
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Add components and target
+RUN rustup component add rust-src --toolchain nightly
+RUN rustup target add wasm32-unknown-emscripten --toolchain nightly
+
+# Set working directory
+WORKDIR /src
+
+# Default command: build the project using -Zbuild-std
+CMD ["cargo", "+nightly", "build", "--release", "-Zbuild-std=std,panic_abort", "--target", "wasm32-unknown-emscripten"]

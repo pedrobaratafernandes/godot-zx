@@ -1,0 +1,25 @@
+# Godot
+.godot/
+*.translation
+
+# Rust / Cargo
+target/
+Cargo.lock
+
+# User-specific
+.vscode/
+.idea/
+*.swp
+*.bak
+
+# Build and Binary artifacts
+/GodotProject/build/*
+/GodotProject/bin/*
+/GodotProject/roms/*
+/GodotProject/games/*
+
+# Keep the README files for structure
+!GodotProject/bin/README.md
+!GodotProject/roms/README.md
+!GodotProject/games/README.md
+

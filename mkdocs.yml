@@ -1,0 +1,50 @@
+site_name: Godot ZX Spectrum Emulator
+site_url: https://pedrobaratafernandes.github.io/godot-zx/
+repo_url: https://github.com/pedrobaratafernandes/godot-zx
+repo_name: pedrobaratafernandes/godot-zx
+
+theme:
+  name: material
+  language: pt
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+nav:
+  - Welcome: index.md
+  - English:
+      - Home: en/index.md
+      - How to Build: en/build.md
+      - User Guide: en/guide.md
+      - Controls: en/controls.md
+  - Português:
+      - Introdução: pt/index.md
+      - Como Compilar: pt/build.md
+      - Guia de Uso: pt/guide.md
+      - Controlos: pt/controls.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - tables
