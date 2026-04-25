@@ -5,7 +5,7 @@ O projeto suporta dois fluxos de trabalho principais:
 
 1. **Versão Launcher (Multi-jogo)**: Utilize `Scenes/Launcher/Launcher.tscn` como cena principal. Permite navegar nos jogos da pasta `Games/`.
 2. **Versão Standalone (Jogo único)**: Desenhada para a distribuição de um jogo específico (ex: Steam).
-    *   **Configuração**: Abra `Scenes/Standalone/Main48K_Standalone.tscn`, selecione o nó **Emulator** e defina o `Game Path` no Inspector.
+    *   **Configuração**: Veja o guia detalhado de [Configuração Standalone](standalone.md) para instruções sobre como definir o `Game Path` no Inspector.
     *   **Cena Principal**: Para iniciar diretamente no jogo, **deve** definir a cena Standalone como **Main Scene** em `Project > Project Settings > Application > Run`.
 
 ## Previews de Jogos (Capas)

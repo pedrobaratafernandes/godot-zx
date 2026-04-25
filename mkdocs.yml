@@ -36,11 +36,13 @@ nav:
       - Home: en/index.md
       - How to Build: en/build.md
       - User Guide: en/guide.md
+      - Standalone Config: en/standalone.md
       - Controls: en/controls.md
   - Português:
       - Introdução: pt/index.md
       - Como Compilar: pt/build.md
       - Guia de Uso: pt/guide.md
+      - Configuração Standalone: pt/standalone.md
       - Controlos: pt/controls.md
 
 markdown_extensions:

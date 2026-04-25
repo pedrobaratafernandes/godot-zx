@@ -5,7 +5,7 @@ The project supports two main workflows:
 
 1. **Launcher Version (Multi-game)**: Use `Scenes/Launcher/Launcher.tscn` as the main scene. It allows users to browse games in the `Games/` folder and choose models dynamically.
 2. **Standalone Version (Single-game)**: Designed for distributing a specific game (e.g., Steam).
-    *   **Configuration**: Open `Scenes/Standalone/Main48K_Standalone.tscn`, select the **Emulator** node, and set the `Game Path` in the Inspector.
+    *   **Configuration**: See the detailed [Standalone Configuration](standalone.md) guide for instructions on how to set the `Game Path` in the Inspector.
     *   **Main Scene**: To boot directly into your game, you **must** set your Standalone scene as the **Main Scene** in `Project > Project Settings > Application > Run`.
 
 ## Game Previews (Covers)

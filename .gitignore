@@ -13,11 +13,9 @@ Cargo.lock
 *.bak
 
 # Build and Binary artifacts
-/GodotProject/build/*
-/GodotProject/roms/*
 /GodotProject/games/*
 
-# Keep the README files for structure
-!GodotProject/roms/README.md
+#keep files
+!GodotProject/games/znake.tap
 !GodotProject/games/README.md
 
