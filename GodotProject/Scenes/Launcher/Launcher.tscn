@@ -1,0 +1,125 @@
+[gd_scene format=3 uid="uid://bqi8y8sh0svay"]
+
+[ext_resource type="Script" uid="uid://c16pkbe82tsr5" path="res://Scripts/Launcher/Launcher.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://d6f8ujo14f5b" path="res://icon.svg" id="2_icon"]
+
+[node name="Launcher" type="Control" unique_id=1596329214]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="." unique_id=326352189]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.121569, 0.121569, 0.121569, 1)
+
+[node name="Logo" type="TextureRect" parent="." unique_id=144804147]
+modulate = Color(1, 1, 1, 0.44705883)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_icon")
+stretch_mode = 1
+
+[node name="DecorativeGradient" type="ColorRect" parent="." unique_id=1622917793]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.180392, 0.180392, 0.231373, 0.6)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=176105314]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.111734256
+anchor_top = 0.13343109
+anchor_right = 0.8882657
+anchor_bottom = 0.8665689
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+metadata/_edit_use_anchors_ = true
+
+[node name="Title" type="Label" parent="VBoxContainer" unique_id=1578232027]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Godot ZX"
+horizontal_alignment = 1
+
+[node name="MainContent" type="HBoxContainer" parent="VBoxContainer" unique_id=1567676266]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 40
+
+[node name="GameListContainer" type="VBoxContainer" parent="VBoxContainer/MainContent" unique_id=907834789]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/MainContent/GameListContainer" unique_id=1665524864]
+layout_mode = 2
+text = "SELECT GAME (.tap, .sna, .z80)"
+
+[node name="GameList" type="ItemList" parent="VBoxContainer/MainContent/GameListContainer" unique_id=2075317008]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 18
+
+[node name="MachineContainer" type="VBoxContainer" parent="VBoxContainer/MainContent" unique_id=1879692223]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="GamePreview" type="TextureRect" parent="VBoxContainer/MainContent/MachineContainer" unique_id=2031505603]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(256, 192)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="VBoxContainer/MainContent/MachineContainer" unique_id=710869050]
+layout_mode = 2
+text = "RUN ON MACHINE"
+horizontal_alignment = 1
+
+[node name="Btn48K" type="Button" parent="VBoxContainer/MainContent/MachineContainer" unique_id=1844866508]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Sinclair 48K"
+
+[node name="Btn128K" type="Button" parent="VBoxContainer/MainContent/MachineContainer" unique_id=402336412]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Sinclair 128K"
+
+[node name="Footer" type="Label" parent="." unique_id=1494560298]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.37057808
+anchor_top = 0.96480936
+anchor_right = 0.6294219
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.603922, 0.603922, 0.603922, 1)
+text = "Powered by rustzx-core"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true

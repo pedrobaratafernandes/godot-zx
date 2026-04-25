@@ -1,0 +1,17 @@
+[configuration]
+entry_symbol = "gdext_rust_init"
+compatibility_minimum = "4.6"
+
+[libraries]
+linux.debug.x86_64 = "res://bin/libgodot_zx.so"
+linux.release.x86_64 = "res://bin/libgodot_zx.so"
+windows.debug.x86_64 = "res://bin/godot_zx.dll"
+windows.release.x86_64 = "res://bin/godot_zx.dll"
+macos.debug = "res://bin/libgodot_zx.dylib"
+macos.release = "res://bin/libgodot_zx.dylib"
+
+# Web support (Threaded and Non-threaded versions)
+web.debug.threads.wasm32 = "res://bin/godot_zx.threads.wasm"
+web.release.threads.wasm32 = "res://bin/godot_zx.threads.wasm"
+web.debug.wasm32 = "res://bin/godot_zx.wasm"
+web.release.wasm32 = "res://bin/godot_zx.wasm"

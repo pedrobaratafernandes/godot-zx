@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://dijx7vl11ddg"]
+
+[ext_resource type="Script" uid="uid://c3wfkbqprv2bu" path="res://Scripts/Emulator/Main128K.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://d6f8ujo14f5b" path="res://icon.svg" id="2_icon"]
+[ext_resource type="PackedScene" uid="uid://menuoverlay" path="res://Scenes/GameMenu/GameMenu.tscn" id="3_menu"]
+
+[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_sound"]
+
+[node name="Main128K" type="Control" unique_id=850767363]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="." unique_id=326352189]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.121569, 0.121569, 0.121569, 1)
+
+[node name="Logo" type="TextureRect" parent="." unique_id=144804147]
+modulate = Color(1, 1, 1, 0.44705883)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_icon")
+stretch_mode = 1
+
+[node name="DecorativeGradient" type="ColorRect" parent="." unique_id=1622917793]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.180392, 0.180392, 0.231373, 0.6)
+
+[node name="Display" type="TextureRect" parent="." unique_id=1889195075]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -384.0
+offset_top = -288.0
+offset_right = 384.0
+offset_bottom = 288.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ZXEmulator128K" type="ZXEmulator128K" parent="." unique_id=1777373805]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1992140955]
+stream = SubResource("AudioStreamGenerator_sound")
+
+[node name="GameMenu" parent="." unique_id=965776266 instance=ExtResource("3_menu")]
+visible = false
