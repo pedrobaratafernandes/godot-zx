@@ -1,3 +1,4 @@
+@tool
 extends Control
 
 # This script is a "Standalone" version of the 48K emulator.
@@ -12,6 +13,15 @@ extends Control
 @export_category("Standalone Configuration")
 ## The specific Spectrum game file (.tap, .sna, .z80) to load.
 @export_file("*.tap", "*.sna", "*.szx", "*.z80", "*.scr") var game_path: String = ""
+
+## If enabled, the game will try to load 'autoload.tap' from the web server when running in a browser.
+@export var web_autoload: bool = true:
+	set(value):
+		web_autoload = value
+		if web_autoload:
+			game_path = ""
+			print("[Standalone] Web Autoload enabled. Clearing game_path.")
+		notify_property_list_changed()
 
 ## Optional: Override the default 48K ROM. (Leave empty to use the built-in ROM).
 @export_file("*.rom") var custom_rom_path: String = ""
@@ -43,7 +53,16 @@ func _get_save_path() -> String:
 	var safe_name = game_path.replace("res://", "").replace("/", "_").replace(":", "_").replace(".", "_")
 	return "user://saves/" + safe_name + "_48k.sna"
 
+func _validate_property(property: Dictionary):
+	if property.name == "game_path":
+		if web_autoload:
+			property.usage = PROPERTY_USAGE_NONE # Completamente escondido
+		else:
+			property.usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+
 func _ready():
+	if Engine.is_editor_hint(): return
+	
 	# 1. Initialize Audio
 	audio_player.play()
 	audio_playback = audio_player.get_stream_playback()
@@ -74,13 +93,14 @@ func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 	# 6. Load the specific standalone game
-	_load_standalone_game()
+	if web_autoload and OS.has_feature("web") and game_path == "":
+		_try_web_autoload()
+	else:
+		_load_standalone_game()
 
 func _load_standalone_game():
 	# 1. ROM Loading
-	if custom_rom_path != "" and FileAccess.file_exists(custom_rom_path):
-		emulator.load_rom(FileAccess.get_file_as_bytes(custom_rom_path))
-		print("Custom 48K ROM Loaded: ", custom_rom_path)
+	_load_standalone_roms()
 	
 	# 2. Game Loading
 	if game_path != "" and FileAccess.file_exists(game_path):
@@ -102,7 +122,47 @@ func _load_standalone_game():
 			_:
 				push_error("Standalone Error: Unsupported file format: " + ext)
 	else:
-		push_warning("Standalone: No game file selected or file not found.")
+		push_warning("[ZX] Starting with ROM only. (No game selected)")
+
+func _load_standalone_roms():
+	if custom_rom_path != "" and FileAccess.file_exists(custom_rom_path):
+		emulator.load_rom(FileAccess.get_file_as_bytes(custom_rom_path))
+		print("Custom 48K ROM Loaded: ", custom_rom_path)
+
+# --- WEB AUTOLOAD LOGIC ---
+
+func _try_web_autoload():
+	var http = HTTPRequest.new()
+	add_child(http)
+	http.request_completed.connect(_on_autoload_completed)
+	
+	# Construct absolute URL using JavaScript
+	var url = "autoload.tap"
+	if OS.has_feature("web"):
+		var base_url = JavaScriptBridge.eval("window.location.href.substring(0, window.location.href.lastIndexOf('/'))")
+		if base_url:
+			url = base_url + "/autoload.tap"
+			
+	print("[ZX] Attempting web autoload at: ", url)
+	
+	var err = http.request(url)
+	if err != OK:
+		print("[ZX] Error starting HTTP request: ", err)
+		_load_standalone_game()
+
+func _on_autoload_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
+	if result == HTTPRequest.RESULT_SUCCESS and response_code == 200 and body.size() > 0:
+		print("[ZX] SUCCESS! autoload.tap loaded (", body.size(), " bytes).")
+		
+		_load_standalone_roms()
+		emulator.load_tape(body)
+		emulator.start_tape_load()
+		menu.set_status("Machine: 48K | Game: autoload.tap (Web)")
+	else:
+		print("[ZX] Autoload failed.")
+		print("  - Godot Error: ", result)
+		print("  - HTTP Code: ", response_code)
+		_load_standalone_game()
 
 func _process(_delta):
 	if emulator.is_paused(): return

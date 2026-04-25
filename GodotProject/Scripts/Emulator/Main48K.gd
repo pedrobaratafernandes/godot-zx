@@ -68,19 +68,56 @@ func _ready():
 
 	
 	# 6. Load ROM and the selected Game
-	_load_assets()
+	if Config.selected_game_path == "":
+		_try_web_autoload()
+	else:
+		_load_assets()
+
+func _try_web_autoload():
+	var http = HTTPRequest.new()
+	add_child(http)
+	http.request_completed.connect(_on_autoload_completed)
+	
+	# Construct absolute URL using JavaScript
+	var url = "autoload.tap"
+	if OS.has_feature("web"):
+		var base_url = JavaScriptBridge.eval("window.location.href.substring(0, window.location.href.lastIndexOf('/'))")
+		if base_url:
+			url = base_url + "/autoload.tap"
+	
+	push_warning("[ZX] Tentando autoload web em: " + url)
+	
+	var err = http.request(url)
+	if err != OK:
+		push_warning("[ZX] Erro ao iniciar pedido HTTP: " + str(err))
+		_load_assets()
+
+func _on_autoload_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
+	if result == HTTPRequest.RESULT_SUCCESS and response_code == 200 and body.size() > 0:
+		push_warning("[ZX] SUCESSO! autoload.tap carregado (" + str(body.size()) + " bytes).")
+		
+		# Ensure ROM is loaded first
+		if Config.ROM_48K != "" and FileAccess.file_exists(Config.ROM_48K):
+			emulator.load_rom(FileAccess.get_file_as_bytes(Config.ROM_48K))
+		
+		emulator.load_tape(body)
+		emulator.start_tape_load()
+		menu.set_status("Machine: 48K | Game: autoload.tap (Web)")
+	else:
+		push_warning("[ZX] Falha no autoload. Código HTTP: " + str(response_code))
+		_load_assets()
 
 func _load_assets():
 	# 1. ROM Loading
-	# The 48K model includes an internal Sinclair ROM, but we can override it if a path is provided.
 	if Config.ROM_48K != "" and FileAccess.file_exists(Config.ROM_48K):
 		emulator.load_rom(FileAccess.get_file_as_bytes(Config.ROM_48K))
 		print("48K Custom ROM loaded: ", Config.ROM_48K)
+	
 	# 2. Game Loading
 	var game_path = Config.selected_game_path
 	
 	if game_path == "":
-		push_warning("Warning: No game selected. Starting with ROM only.")
+		push_warning("[ZX] Iniciando apenas com ROM. (Nenhum jogo selecionado)")
 		return
 		
 	if FileAccess.file_exists(game_path):
@@ -96,11 +133,11 @@ func _load_assets():
 				emulator.load_snapshot(data)
 				print("48K Snapshot loaded: ", game_path)
 			"szx":
-				push_warning("SZX format not supported in this build (requires rustzx-core 0.17.0+). Use .SNA or .Z80.")
+				push_warning("SZX format not supported. Use .SNA or .Z80.")
 			"scr":
-				print("48K Screen dump preview only: ", game_path)
+				print("48K Screen dump preview: ", game_path)
 			_:
-				push_error("Error: Unsupported file format: " + ext)
+				push_error("Error: Unsupported format: " + ext)
 	else:
 		push_error("Error: File not found: " + game_path)
 
