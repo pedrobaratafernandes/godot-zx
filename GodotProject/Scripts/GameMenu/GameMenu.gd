@@ -44,7 +44,7 @@ func _ready():
 	_setup_button_animations()
 
 func _setup_button_animations():
-	var buttons = [save_button, load_button, reset_button, launcher_button, quit_button, fullscreen_button, resume_button, screenshot_button]
+	var buttons = [save_button, load_button, reset_button, launcher_button, quit_button, fullscreen_button, resume_button]
 	for btn in buttons:
 		if btn:
 			btn.mouse_entered.connect(_on_button_hover.bind(btn))
