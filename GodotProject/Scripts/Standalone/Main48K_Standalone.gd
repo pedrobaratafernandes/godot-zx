@@ -31,7 +31,7 @@ var audio_playback: AudioStreamGeneratorPlayback
 var audio_buffer: PackedVector2Array = []
 
 # Minimum safety buffer size at 44100Hz to prevent audio stuttering (underruns)
-const MIN_BUFFER_FRAMES = 4096 
+const MIN_BUFFER_FRAMES = 4096
 
 # DC Blocker filter state variables
 var _last_raw_sample: Vector2 = Vector2.ZERO
@@ -89,6 +89,8 @@ func _ready():
         _try_web_autoload()
     else:
         _load_standalone_game()
+    
+    
         
     if DisplayServer.is_touchscreen_available():
         if has_node("VirtualControls"): $VirtualControls.show()
@@ -150,32 +152,6 @@ func _process(_delta):
     # Unified Audio Processing: Fetches samples from the Rust core and pushes to Godot
     if audio_playback:
         _update_audio()
-    
-    # Handle Dynamic Virtual Actions (zx_*)
-    for action in zx_actions:
-        if Input.is_action_just_pressed(action):
-            emulator.send_key(action.substr(3).to_lower(), true)
-        elif Input.is_action_just_released(action):
-            emulator.send_key(action.substr(3).to_lower(), false)
-            
-    # Handle Arrow Keys / D-pad Input
-    if Input.is_action_just_pressed("arrow_up"): emulator.send_key(key_up.to_lower(), true); _send_joy("UP", true)
-    if Input.is_action_just_released("arrow_up"): emulator.send_key(key_up.to_lower(), false); _send_joy("UP", false)
-    
-    if Input.is_action_just_pressed("arrow_down"): emulator.send_key(key_down.to_lower(), true); _send_joy("DOWN", true)
-    if Input.is_action_just_released("arrow_down"): emulator.send_key(key_down.to_lower(), false); _send_joy("DOWN", false)
-    
-    if Input.is_action_just_pressed("arrow_left"): emulator.send_key(key_left.to_lower(), true); _send_joy("LEFT", true)
-    if Input.is_action_just_released("arrow_left"): emulator.send_key(key_left.to_lower(), false); _send_joy("LEFT", false)
-    
-    if Input.is_action_just_pressed("arrow_right"): emulator.send_key(key_right.to_lower(), true); _send_joy("RIGHT", true)
-    if Input.is_action_just_released("arrow_right"): emulator.send_key(key_right.to_lower(), false); _send_joy("RIGHT", false)
-    
-    if Input.is_action_just_pressed("arrow_fire"): emulator.send_key(key_fire.to_lower(), true); _send_joy("FIRE", true)
-    if Input.is_action_just_released("arrow_fire"): emulator.send_key(key_fire.to_lower(), false); _send_joy("FIRE", false)
-    
-    if Input.is_action_just_pressed("zx_fire"): _send_joy("FIRE", true)
-    if Input.is_action_just_released("zx_fire"): _send_joy("FIRE", false)
 
 
 # NOTE: _physics_process was intentionally removed. Handling emulation in the 
@@ -276,14 +252,58 @@ func _toggle_fullscreen():
         DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 
 
-func _input(event):
+func _input(event: InputEvent):
     if event.is_action_pressed("ui_cancel"):
         _toggle_pause()
         get_viewport().set_input_as_handled()
         return
     
     if emulator.is_paused(): return
+
+    # 1. ARROW MAPPING
+    if event.is_action("arrow_up"):
+        var pressed = event.is_pressed()
+        emulator.send_key(key_up.to_lower(), pressed)
+        _send_joy("UP", pressed)
+        get_viewport().set_input_as_handled()
+        return
+    if event.is_action("arrow_down"):
+        var pressed = event.is_pressed()
+        emulator.send_key(key_down.to_lower(), pressed)
+        _send_joy("DOWN", pressed)
+        get_viewport().set_input_as_handled()
+        return
+    if event.is_action("arrow_left"):
+        var pressed = event.is_pressed()
+        emulator.send_key(key_left.to_lower(), pressed)
+        _send_joy("LEFT", pressed)
+        get_viewport().set_input_as_handled()
+        return
+    if event.is_action("arrow_right"):
+        var pressed = event.is_pressed()
+        emulator.send_key(key_right.to_lower(), pressed)
+        _send_joy("RIGHT", pressed)
+        get_viewport().set_input_as_handled()
+        return
+
+    # 2. FIRE MAPPING
+    if event.is_action("zx_fire") or event.is_action("arrow_fire"):
+        var pressed = event.is_pressed()
+        _send_joy("FIRE", pressed)
+        if event.is_action("arrow_fire"):
+            emulator.send_key(key_fire.to_lower(), pressed)
+        get_viewport().set_input_as_handled()
+        return
+
+    # 3. DYNAMIC ACTIONS (zx_*)
+    for action in zx_actions:
+        if event.is_action(action):
+            var zx_key_name = action.substr(3)
+            emulator.send_key(zx_key_name.to_lower(), event.is_pressed())
+            get_viewport().set_input_as_handled()
+            return
     
+    # 4. RAW KEYBOARD FALLBACK
     if event is InputEventKey and not event.is_echo():
         var key_name = OS.get_keycode_string(event.keycode)
         emulator.send_key(key_name.to_lower(), event.pressed)

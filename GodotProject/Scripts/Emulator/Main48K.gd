@@ -15,7 +15,7 @@ var zx_actions: Array[StringName] = []
 var mouse_accumulation: Vector2 = Vector2.ZERO
 
 # Minimum safety buffer size at 44100Hz to prevent audio stuttering (underruns)
-const MIN_BUFFER_FRAMES = 4096 
+const MIN_BUFFER_FRAMES = 4096
 
 # DC Blocker filter state variables
 var _last_raw_sample: Vector2 = Vector2.ZERO
@@ -100,52 +100,6 @@ func _process(_delta):
 	if tex: display.texture = tex
 	# Unified Audio Processing: Fetches samples from the Rust core and pushes to Godot
 	_update_audio()
-	
-	# Handle Dynamic ZX Actions
-	for action in zx_actions:
-		if Input.is_action_just_pressed(action):
-			emulator.send_key(action.substr(3).to_lower(), true)
-		elif Input.is_action_just_released(action):
-			emulator.send_key(action.substr(3).to_lower(), false)
-			
-	# Handle Arrows / D-pad
-	if Input.is_action_just_pressed("arrow_up"):
-		var target = sec_up if use_secondary_mapping else key_up
-		emulator.send_key(target.to_lower(), true); _send_joy("UP", true)
-	if Input.is_action_just_released("arrow_up"):
-		var target = sec_up if use_secondary_mapping else key_up
-		emulator.send_key(target.to_lower(), false); _send_joy("UP", false)
-		
-	if Input.is_action_just_pressed("arrow_down"):
-		var target = sec_down if use_secondary_mapping else key_down
-		emulator.send_key(target.to_lower(), true); _send_joy("DOWN", true)
-	if Input.is_action_just_released("arrow_down"):
-		var target = sec_down if use_secondary_mapping else key_down
-		emulator.send_key(target.to_lower(), false); _send_joy("DOWN", false)
-		
-	if Input.is_action_just_pressed("arrow_left"):
-		var target = sec_left if use_secondary_mapping else key_left
-		emulator.send_key(target.to_lower(), true); _send_joy("LEFT", true)
-	if Input.is_action_just_released("arrow_left"):
-		var target = sec_left if use_secondary_mapping else key_left
-		emulator.send_key(target.to_lower(), false); _send_joy("LEFT", false)
-		
-	if Input.is_action_just_pressed("arrow_right"):
-		var target = sec_right if use_secondary_mapping else key_right
-		emulator.send_key(target.to_lower(), true); _send_joy("RIGHT", true)
-	if Input.is_action_just_released("arrow_right"):
-		var target = sec_right if use_secondary_mapping else key_right
-		emulator.send_key(target.to_lower(), false); _send_joy("RIGHT", false)
-		
-	if Input.is_action_just_pressed("arrow_fire"):
-		var target = sec_fire if use_secondary_mapping else key_fire
-		emulator.send_key(target.to_lower(), true); _send_joy("FIRE", true)
-	if Input.is_action_just_released("arrow_fire"):
-		var target = sec_fire if use_secondary_mapping else key_fire
-		emulator.send_key(target.to_lower(), false); _send_joy("FIRE", false)
-		
-	if Input.is_action_just_pressed("zx_fire"): _send_joy("FIRE", true)
-	if Input.is_action_just_released("zx_fire"): _send_joy("FIRE", false)
 
 
 func _update_audio():
@@ -254,6 +208,53 @@ func _input(event: InputEvent):
 
 	if emulator.is_paused(): return
 
+	# 2. ARROW MAPPING
+	if event.is_action("arrow_up"):
+		var target = sec_up if use_secondary_mapping else key_up
+		var pressed = event.is_pressed()
+		emulator.send_key(target.to_lower(), pressed)
+		_send_joy("UP", pressed)
+		get_viewport().set_input_as_handled()
+		return
+	if event.is_action("arrow_down"):
+		var target = sec_down if use_secondary_mapping else key_down
+		var pressed = event.is_pressed()
+		emulator.send_key(target.to_lower(), pressed)
+		_send_joy("DOWN", pressed)
+		get_viewport().set_input_as_handled()
+		return
+	if event.is_action("arrow_left"):
+		var target = sec_left if use_secondary_mapping else key_left
+		var pressed = event.is_pressed()
+		emulator.send_key(target.to_lower(), pressed)
+		_send_joy("LEFT", pressed)
+		get_viewport().set_input_as_handled()
+		return
+	if event.is_action("arrow_right"):
+		var target = sec_right if use_secondary_mapping else key_right
+		var pressed = event.is_pressed()
+		emulator.send_key(target.to_lower(), pressed)
+		_send_joy("RIGHT", pressed)
+		get_viewport().set_input_as_handled()
+		return
+
+	# 3. FIRE MAPPING
+	if event.is_action("zx_fire") or event.is_action("arrow_fire"):
+		var pressed = event.is_pressed()
+		_send_joy("FIRE", pressed)
+		if event.is_action("arrow_fire"):
+			var target = sec_fire if use_secondary_mapping else key_fire
+			emulator.send_key(target.to_lower(), pressed)
+		get_viewport().set_input_as_handled()
+		return
+
+	# 4. DYNAMIC ACTIONS (zx_*)
+	for action in zx_actions:
+		if event.is_action(action):
+			var zx_key_name = action.substr(3)
+			emulator.send_key(zx_key_name.to_lower(), event.is_pressed())
+			get_viewport().set_input_as_handled()
+			return
 
 	# 5. RAW KEYBOARD FALLBACK
 	if event is InputEventKey and not event.is_echo():

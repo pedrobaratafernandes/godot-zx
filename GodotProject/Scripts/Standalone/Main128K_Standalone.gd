@@ -34,7 +34,7 @@ var audio_buffer: PackedVector2Array = []
 var mouse_accumulation: Vector2 = Vector2.ZERO
 
 # Minimum safety buffer size at 44100Hz to prevent audio stuttering (underruns)
-const MIN_BUFFER_FRAMES = 4096 
+const MIN_BUFFER_FRAMES = 4096
 
 # DC Blocker filter state variables
 var _last_raw_sample: Vector2 = Vector2.ZERO
@@ -87,7 +87,7 @@ func _ready():
 		_try_web_autoload()
 	else:
 		_load_standalone_game()
-		
+	
 	if DisplayServer.is_touchscreen_available():
 		if has_node("VirtualControls"): $VirtualControls.show()
 		if has_node("FireButton"): $FireButton.show()
@@ -245,7 +245,7 @@ func _toggle_fullscreen():
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 
-func _input(event):
+func _input(event: InputEvent):
 	if event.is_action_pressed("ui_cancel"):
 		_toggle_pause()
 		get_viewport().set_input_as_handled()

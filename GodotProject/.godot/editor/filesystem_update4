@@ -13,3 +13,5 @@ res://Scenes/Dpad/virtual_keyboard.tscn
 res://Scenes/GameMenu/GameMenu.tscn
 res://Scripts/GameMenu/GameMenu.gd
 res://Scripts/System/Config.gd
+res://Scenes/Dpad/dpad.tscn
+res://Scenes/Dpad/fire_button.tscn
