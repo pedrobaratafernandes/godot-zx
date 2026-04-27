@@ -6,10 +6,9 @@
 [ext_resource type="PackedScene" uid="uid://dn4w08xcdfday" path="res://Scenes/Dpad/dpad.tscn" id="4_dpad"]
 [ext_resource type="PackedScene" uid="uid://choexaxv04gx5" path="res://Scenes/Dpad/fire_button.tscn" id="5_fire"]
 [ext_resource type="PackedScene" uid="uid://rcbagsjsl6db" path="res://Scenes/Dpad/menu_button.tscn" id="6_menu_btn"]
-[ext_resource type="PackedScene" path="res://Scenes/Dpad/virtual_keyboard.tscn" id="7_v_kbd"]
+[ext_resource type="PackedScene" uid="uid://wo7r4umfcav" path="res://Scenes/Dpad/virtual_keyboard.tscn" id="7_v_kbd"]
 
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_sound"]
-buffer_length = 0.1
 
 [node name="Main128K_Standalone" type="Control" unique_id=807067544]
 layout_mode = 3

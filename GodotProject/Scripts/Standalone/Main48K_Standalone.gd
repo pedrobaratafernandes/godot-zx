@@ -30,8 +30,8 @@ var zx_actions: Array[StringName] = []
 var audio_playback: AudioStreamGeneratorPlayback
 var audio_buffer: PackedVector2Array = []
 
-# Minimum safety buffer size at 44100Hz to prevent audio stuttering (underruns)
-const MIN_BUFFER_FRAMES = 4096
+# Safety buffer size (in frames) to prevent audio stuttering (underruns)
+var min_buffer_frames = 2048
 
 # DC Blocker filter state variables
 var _last_raw_sample: Vector2 = Vector2.ZERO
@@ -55,9 +55,17 @@ func _ready():
     
     print("[Standalone] Starting 48K Standalone Mode...")
     if audio_player:
+        # Platform-specific buffer tuning
+        if OS.has_feature("mobile"):
+            min_buffer_frames = 4096  # ~93ms (Safe for Android/iOS)
+        elif OS.has_feature("web"):
+            min_buffer_frames = 2048  # ~46ms (Browser stability)
+        else:
+            min_buffer_frames = 1024  # ~23ms (Low latency for Desktop)
+
         var gen = AudioStreamGenerator.new()
         gen.mix_rate = 44100.0
-        gen.buffer_length = 0.5 # 500ms - Perfeito para estabilidade Android
+        gen.buffer_length = 0.3 if not OS.has_feature("mobile") else 0.5
         audio_player.stream = gen
         audio_player.play()
         audio_playback = audio_player.get_stream_playback()
@@ -184,7 +192,7 @@ func _update_audio():
 
     # 3. Safety Margin (Jitter Buffer):
     # Only start pushing data if we have enough buffered to handle timing variations
-    if audio_buffer.size() < MIN_BUFFER_FRAMES:
+    if audio_buffer.size() < min_buffer_frames:
         return
 
     # 4. Push samples to Godot's AudioStreamPlayer
@@ -195,10 +203,10 @@ func _update_audio():
         audio_buffer = audio_buffer.slice(to_push)
 
     # 5. Latency Control:
-    # If the buffer grows too large (e.g. system lag), trim it to keep audio in sync with video
-    const MAX_LATENCY_FRAMES = 13230 # ~300ms
-    if audio_buffer.size() > MAX_LATENCY_FRAMES:
-        audio_buffer = audio_buffer.slice(audio_buffer.size() - MIN_BUFFER_FRAMES)
+    # Trims the buffer if it grows too large to keep audio in sync with video
+    var max_latency = min_buffer_frames * 3
+    if audio_buffer.size() > max_latency:
+        audio_buffer = audio_buffer.slice(audio_buffer.size() - min_buffer_frames)
 
 
 func _send_joy(direction: String, pressed: bool):
