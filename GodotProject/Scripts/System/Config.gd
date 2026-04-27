@@ -87,7 +87,7 @@ static func get_128k_rom_data() -> PackedByteArray:
 
 # --- GAME PATHS ---
 
-## Root directory where game files (.tap, .sna, .z80) are stored.
+## Root directory where game files (.tap) are stored.
 static var GAMES_DIR: String = "res://games/"
 
 ## The full path of the game selected in the Launcher, used by the emulator scenes.

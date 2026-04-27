@@ -17,7 +17,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Godot ZX"
-run/main_scene="uid://b8bgoqt5qin31"
+run/main_scene="uid://bqi8y8sh0svay"
 config/features=PackedStringArray("4.6")
 config/icon="uid://d6f8ujo14f5b"
 

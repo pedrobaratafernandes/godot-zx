@@ -59,6 +59,9 @@ func _ready():
 	menu.reset_requested.connect(_on_reset_requested)
 	menu.quit_requested.connect(_on_quit_requested)
 	menu.fullscreen_requested.connect(_toggle_fullscreen)
+
+	if has_node("VirtualKeyboard"):
+		$VirtualKeyboard.zx_key_event.connect(func(key, pressed): emulator.send_key(key, pressed))
 	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
@@ -71,6 +74,8 @@ func _ready():
 	if DisplayServer.is_touchscreen_available():
 		if has_node("VirtualControls"): $VirtualControls.show()
 		if has_node("FireButton"): $FireButton.show()
+		if has_node("MenuButton"): $MenuButton.show()
+		if has_node("VirtualKeyboard"): $VirtualKeyboard.show()
 	
 
 func _load_assets():
@@ -88,8 +93,6 @@ func _load_assets():
 			"tap":
 				emulator.load_tape(data)
 				emulator.start_tape_load()
-			"sna", "z80":
-				emulator.load_snapshot(data)
 	else:
 		push_error("Error: File not found: " + game_path)
 
@@ -152,7 +155,7 @@ func _update_audio():
 	# 1. Fetch ALL pending samples from the emulator and apply filtering
 	var raw = emulator.get_audio_samples()
 	if raw.size() > 0:
-		var num_frames = raw.size() / 2
+		var num_frames = raw.size() / 2.0
 		var frames = PackedVector2Array()
 		frames.resize(num_frames)
 		for i in range(num_frames):

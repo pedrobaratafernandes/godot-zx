@@ -38,7 +38,7 @@ func _ready():
 		btn.focus_exited.connect(_on_button_unhover.bind(btn))
 		btn.pressed.connect(_on_button_pressed.bind(btn))
 	
-	# 3. Scan the games directory for .tap, .sna, and .z80 files
+	# 3. Scan the games directory for .tap files
 	_scan_games()
 	
 	# 4. Set initial focus for keyboard/controller navigation
@@ -74,8 +74,8 @@ func _scan_games():
 		while file_name != "":
 			if not dir.current_is_dir():
 				var ext = file_name.get_extension().to_lower()
-				# We support Tapes (.tap) and Snapshots (.sna, .szx, .z80) and Screenshots (.scr)
-				if ext in ["tap", "sna", "z80"]:
+				# We support Tapes (.tap) and Screenshots (.scr)
+				if ext in ["tap"]:
 					game_files.append(file_name)
 					game_list.add_item(file_name)
 			file_name = dir.get_next()

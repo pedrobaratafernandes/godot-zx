@@ -5,10 +5,11 @@
 [ext_resource type="PackedScene" uid="uid://menuoverlay" path="res://Scenes/GameMenu/GameMenu.tscn" id="3_menu"]
 [ext_resource type="PackedScene" uid="uid://dn4w08xcdfday" path="res://Scenes/Dpad/dpad.tscn" id="4_dpad"]
 [ext_resource type="PackedScene" uid="uid://choexaxv04gx5" path="res://Scenes/Dpad/fire_button.tscn" id="5_fire"]
+[ext_resource type="PackedScene" uid="uid://rcbagsjsl6db" path="res://Scenes/Dpad/menu_button.tscn" id="6_menu_btn"]
+[ext_resource type="PackedScene" path="res://Scenes/Dpad/virtual_keyboard.tscn" id="7_v_kbd"]
 
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_sound"]
 buffer_length = 0.1
-mix_rate = 44100.0
 
 [node name="Main128K" type="Control" unique_id=850767363]
 layout_mode = 3
@@ -61,7 +62,7 @@ stretch_mode = 5
 
 [node name="ZXEmulator128K" type="ZXEmulator128K" parent="." unique_id=1777373805]
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=919758577]
 stream = SubResource("AudioStreamGenerator_sound")
 
 [node name="GameMenu" parent="." unique_id=965776266 instance=ExtResource("3_menu")]
@@ -88,3 +89,11 @@ offset_top = -80.0
 offset_right = -160.0
 offset_bottom = -80.0
 grow_horizontal = 0
+
+[node name="MenuButton" parent="." unique_id=11223345 instance=ExtResource("6_menu_btn")]
+visible = false
+layout_mode = 1
+
+[node name="VirtualKeyboard" parent="." unique_id=11223389 instance=ExtResource("7_v_kbd")]
+visible = false
+layout_mode = 1

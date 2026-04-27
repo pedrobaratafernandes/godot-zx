@@ -2,3 +2,13 @@ res://default_bus_layout.tres
 res://Scenes/Standalone/Main48K_Standalone.tscn
 res://Scripts/Standalone/Main48K_Standalone.gd
 res://Scenes/Standalone/Main128K_Standalone.tscn
+res://Scripts/Standalone/Main128K_Standalone.gd
+res://Scenes/Dpad/menu_button.tscn
+res://Scenes/Emulator/Main48K.tscn
+res://Scripts/Emulator/Main48K.gd
+res://Scripts/Emulator/Main128K.gd
+res://Scenes/Emulator/Main128K.tscn
+res://Scripts/Emulator/VirtualKeyboard.gd
+res://Scenes/Dpad/virtual_keyboard.tscn
+res://Scenes/GameMenu/GameMenu.tscn
+res://Scripts/GameMenu/GameMenu.gd

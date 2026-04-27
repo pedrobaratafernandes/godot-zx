@@ -70,7 +70,7 @@ size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="VBoxContainer/MainContent/GameListContainer" unique_id=1665524864]
 layout_mode = 2
-text = "SELECT GAME (.tap, .sna, .z80)"
+text = "SELECT GAME (.tap)"
 
 [node name="GameList" type="ItemList" parent="VBoxContainer/MainContent/GameListContainer" unique_id=2075317008]
 unique_name_in_owner = true

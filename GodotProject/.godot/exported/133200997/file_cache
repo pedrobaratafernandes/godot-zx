@@ -1,10 +1,12 @@
-res://Scenes/Emulator/Main48K.tscn::647d9ee12f08c6fdf9c73f509c687513::1777242329::res://.godot/exported/133200997/export-866d428ef766029842495b9d3a65e820-Main48K.scn
-res://Scenes/Emulator/Main128K.tscn::c791926308e1994c4d9198cff162ee77::1777242359::res://.godot/exported/133200997/export-fe458951bee94a7a90dd30ac3f5f1714-Main128K.scn
-res://Scenes/GameMenu/GameMenu.tscn::0715ec49c61162956fce8ccbb5993258::1777242247::res://.godot/exported/133200997/export-98ae67a05b23d1cd48d2cf00fffa35af-GameMenu.scn
+res://Scenes/Emulator/Main48K.tscn::beca7ecd5ceff976a3da0758db629366::1777251272::res://.godot/exported/133200997/export-866d428ef766029842495b9d3a65e820-Main48K.scn
+res://Scenes/Emulator/Main128K.tscn::7d7e5b4393895a8c29c73a34882bbd53::1777251272::res://.godot/exported/133200997/export-fe458951bee94a7a90dd30ac3f5f1714-Main128K.scn
+res://Scenes/GameMenu/GameMenu.tscn::cb81e30bde531843f8acf20be47dffe5::1777251702::res://.godot/exported/133200997/export-98ae67a05b23d1cd48d2cf00fffa35af-GameMenu.scn
 res://Scenes/Launcher/Launcher.tscn::3961a42f2a2daab6a9503d50f633fd44::1777208923::res://.godot/exported/133200997/export-ccc14319390343ee047b0506cb7b8dbc-Launcher.scn
 res://Scenes/Standalone/GameMenu_Standalone.tscn::f6905ddb8c90dfa5fd28a7489d3b4a0b::1777242267::res://.godot/exported/133200997/export-f7211d2315adf964d042f51e4ffa4e8c-GameMenu_Standalone.scn
-res://Scenes/Standalone/Main48K_Standalone.tscn::b0f25da35bce84f4eeeae962f271a97b::1777249349::res://.godot/exported/133200997/export-903f51bb6890fdf40679240b612d9d33-Main48K_Standalone.scn
-res://Scenes/Standalone/Main128K_Standalone.tscn::f4b82c271d8e458b0f45c2fed26e82d8::1777249573::res://.godot/exported/133200997/export-938fdbdb792a7eea09bcb2c296986431-Main128K_Standalone.scn
+res://Scenes/Standalone/Main48K_Standalone.tscn::447d3b2c03f60dba2b3721a59e6b7892::1777251272::res://.godot/exported/133200997/export-903f51bb6890fdf40679240b612d9d33-Main48K_Standalone.scn
+res://Scenes/Standalone/Main128K_Standalone.tscn::4b04ceb36e2a22cfd070bdf03ab76b69::1777251272::res://.godot/exported/133200997/export-938fdbdb792a7eea09bcb2c296986431-Main128K_Standalone.scn
 res://Scenes/Dpad/dpad.tscn::3c2dd97f84100eb35c25d64a375bd6a6::1777217975::res://.godot/exported/133200997/export-ebb138391d779e93b899d8ae851c68a1-dpad.scn
 res://Scenes/Dpad/fire_button.tscn::78cce0f289076a223b9266e8b495a45d::1777219679::res://.godot/exported/133200997/export-21dbf269152fd26710a9cd1dbf53c53a-fire_button.scn
 res://default_bus_layout.tres::d7e4d15f31485087f0b2c88423951839::1777249278::res://.godot/exported/133200997/export-19246414aa9fb561ced4b8dce477acec-default_bus_layout.res
+res://Scenes/Dpad/menu_button.tscn::df6f84cd6b7da8222fe50072b508a4e9::1777251457::res://.godot/exported/133200997/export-3234be86e8b4bb89b559c1e550e6bea6-menu_button.scn
+res://Scenes/Dpad/virtual_keyboard.tscn::bef66774f1bff912a3ea3fb02d8cb6ad::1777251574::res://.godot/exported/133200997/export-41805d41c85ea195cebdd9e04fc213e4-virtual_keyboard.scn

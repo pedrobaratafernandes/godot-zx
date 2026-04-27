@@ -5,10 +5,11 @@
 [ext_resource type="PackedScene" uid="uid://menuoverlay" path="res://Scenes/GameMenu/GameMenu.tscn" id="3_menu"]
 [ext_resource type="PackedScene" uid="uid://dn4w08xcdfday" path="res://Scenes/Dpad/dpad.tscn" id="4_27bmq"]
 [ext_resource type="PackedScene" uid="uid://choexaxv04gx5" path="res://Scenes/Dpad/fire_button.tscn" id="5_fire"]
+[ext_resource type="PackedScene" uid="uid://rcbagsjsl6db" path="res://Scenes/Dpad/menu_button.tscn" id="6_menu_btn"]
+[ext_resource type="PackedScene" path="res://Scenes/Dpad/virtual_keyboard.tscn" id="7_v_kbd"]
 
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_sound"]
 buffer_length = 0.1
-mix_rate = 44100.0
 
 [node name="Main48K" type="Control" unique_id=42843865]
 layout_mode = 3
@@ -61,7 +62,7 @@ stretch_mode = 5
 
 [node name="ZXEmulator48K" type="ZXEmulator48K" parent="." unique_id=1307947282]
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1081553452]
 stream = SubResource("AudioStreamGenerator_sound")
 
 [node name="GameMenu" parent="." unique_id=1323353606 instance=ExtResource("3_menu")]
@@ -71,26 +72,28 @@ visible = false
 visible = false
 layout_mode = 1
 anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
+anchor_left = 0.0
+anchor_right = 0.0
 offset_left = 147.295
-offset_top = 0.0
 offset_right = 147.295
-offset_bottom = 0.0
 grow_horizontal = 1
-grow_vertical = 2
 
 [node name="FireButton" parent="." unique_id=673182142 instance=ExtResource("5_fire")]
 visible = false
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
-anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 0.5
 offset_left = -160.0
 offset_top = -80.0
 offset_right = -160.0
 offset_bottom = -80.0
 grow_horizontal = 0
-grow_vertical = 2
+
+[node name="MenuButton" parent="." unique_id=11223344 instance=ExtResource("6_menu_btn")]
+visible = false
+layout_mode = 1
+
+[node name="VirtualKeyboard" parent="." unique_id=11223388 instance=ExtResource("7_v_kbd")]
+visible = false
+layout_mode = 1

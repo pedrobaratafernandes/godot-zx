@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://menuoverlay" path="res://Scenes/GameMenu/GameMenu.tscn" id="3_menu"]
 [ext_resource type="PackedScene" uid="uid://dn4w08xcdfday" path="res://Scenes/Dpad/dpad.tscn" id="4_dpad"]
 [ext_resource type="PackedScene" uid="uid://choexaxv04gx5" path="res://Scenes/Dpad/fire_button.tscn" id="5_fire"]
+[ext_resource type="PackedScene" uid="uid://rcbagsjsl6db" path="res://Scenes/Dpad/menu_button.tscn" id="6_menu_btn"]
+[ext_resource type="PackedScene" path="res://Scenes/Dpad/virtual_keyboard.tscn" id="7_v_kbd"]
 
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_4t2xd"]
 
@@ -87,3 +89,11 @@ offset_top = -80.0
 offset_right = -160.0
 offset_bottom = -80.0
 grow_horizontal = 0
+
+[node name="MenuButton" parent="." unique_id=11223346 instance=ExtResource("6_menu_btn")]
+visible = false
+layout_mode = 1
+
+[node name="VirtualKeyboard" parent="." unique_id=11223390 instance=ExtResource("7_v_kbd")]
+visible = false
+layout_mode = 1

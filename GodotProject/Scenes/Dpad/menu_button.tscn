@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://rcbagsjsl6db"]
+
+[ext_resource type="Texture2D" uid="uid://ep5licjglnfd" path="res://assets/keys/start.png" id="1_icon"]
+
+[node name="MenuButton" type="Control" unique_id=1137064161]
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+
+[node name="Button" type="TouchScreenButton" parent="." unique_id=1961882008]
+position = Vector2(20, 20)
+texture_normal = ExtResource("1_icon")
+scale = Vector2(1.5, 1.5)
+passby_press = true
+action = "ui_cancel"
+visibility_mode = 1

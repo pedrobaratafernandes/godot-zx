@@ -38,6 +38,13 @@ func _ready():
 	if OS.has_feature("web"):
 		quit_button.hide()
 		
+	# Mobile adjustments: Increase button font sizes
+	if DisplayServer.is_touchscreen_available() or OS.get_name() in ["Android", "iOS"]:
+		var buttons = [save_button, load_button, reset_button, launcher_button, quit_button, fullscreen_button, resume_button]
+		for btn in buttons:
+			if btn:
+				btn.add_theme_font_size_override("font_size", 22)
+		
 	visibility_changed.connect(_on_visibility_changed)
 	_setup_button_animations()
 
