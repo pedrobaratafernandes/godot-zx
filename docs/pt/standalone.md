@@ -15,12 +15,38 @@ Na imagem abaixo, pode ver a configuração do Editor Godot para a cena Standalo
 **O que vê na imagem:**
 
 1.  **Árvore de Cena (Scene Tree)**: A cena `Main48K_Standalone.tscn` (ou `Main128K_Standalone.tscn`) está aberta.
-2.  **Nó Selecionado**: O nó raiz (**Main48K_Standalone**) está selecionado.
+2.  **Nó Selecionado**: O nó raiz (**Main48K_Standalone**) é selecionado.
 3.  **Inspetor (Inspector)**: No painel direito, sob a categoria **Standalone Configuration**, encontra os campos para configurar o jogo.
-4.  **Game Path**: Aqui define o caminho para o ficheiro local (ex: `res://games/znake.tap`).
+4.  **Game Path**: Aqui define o caminho para o ficheiro local (ex: `res://games/znake.tap`). **Apenas ficheiros .tap são suportados.**
 
-!!! tip
-    Certifique-se de que o ficheiro do jogo selecionado está dentro da pasta `res://` do projeto (ex: em `res://games/`) para que seja incluído no executável final.
+---
+
+## Estratégia de Controlos e Mapeamento
+
+Ao contrário do emulador principal, a versão Standalone utiliza um **Mapeamento Único e Fixo** por questões de simplicidade.
+
+1.  **Configuração Fixa**: Define o mapeamento das setas (ex: Q/A/O/P) diretamente no Inspetor.
+2.  **Sem Alternador**: O alternador por Caps Lock está desativado neste modo para garantir uma experiência consistente.
+
+---
+
+## Controlos Virtuais (Itch.io & Mobile)
+
+O projeto inclui um **D-pad** e um **Botão de Fire** virtuais, ideais para versões Web publicadas em plataformas como o **Itch.io**.
+
+### Mapeamento de Ações (Input Actions)
+
+Os botões virtuais (do tipo `TouchScreenButton`) estão ligados às seguintes ações do Godot:
+
+*   **D-pad**: Envia as ações `arrow_up`, `arrow_down`, `arrow_left` e `arrow_right`.
+*   **Botão de Fire**: Envia a ação `zx_fire`.
+
+### Opção: Visibility Mode (TouchScreen Only)
+
+Todos os controlos virtuais vêm configurados de fábrica com a opção **Visibility Mode** definida como **TouchScreen Only** no Inspetor do Godot.
+
+*   **Como Funciona**: Esta opção nativa do Godot faz com que os botões fiquem invisíveis em computadores e apareçam automaticamente apenas quando o jogo é aberto num dispositivo com ecrã táctil.
+*   **Vantagem**: Garante uma interface limpa para jogadores de PC (Steam) e uma interface funcional para jogadores de Web/Mobile (Itch.io).
 
 ---
 
@@ -45,13 +71,13 @@ No Inspetor, pode alternar entre o modo local e o modo web:
 ![Enable Web Autoload](../images/enable_autoload.png)
 
 1.  **Ativar Web Autoload**: Clique na caixa **Web Autoload**.
-2.  **Efeito Automático**: Assim que ativa esta opção, o campo *Game Path* desaparece e é limpo automaticamente. Isto garante que o emulador dará prioridade ao ficheiro `autoload.tap` que encontrar no servidor.
+2.  **Efeito Automático**: Assim que ativa esta opção, o campo *Game Path* desaparece e é limpo automaticamente.
 
 ---
 
 ## Servidor Web para Testes (Python)
 
-Para que o export Web funcione corretamente, deve usar um servidor web local. Pode usar o código abaixo:
+Para que o export Web funcione corretamente, deve usar o servidor incluído. Pode usá-lo assim:
 
 ```python
 # Guarde como server.py na pasta de exportação
@@ -135,9 +161,9 @@ if __name__ == "__main__":
     serve(args.root, args.port, args.browser)
 ```
 
-```python
-# Exemplo de como iniciar o servidor com uma porta diferente:
-python server.py --port 8070 --root .
+```bash
+# Exemplo de como iniciar o servidor:
+python server.py --port 8060 --root .
 ```
 
 ---
@@ -151,6 +177,3 @@ Se atualizar o ficheiro `autoload.tap` no servidor mas o browser continuar a car
 1.  Abra o jogo no browser e pressione **F12**.
 2.  Com a janela do F12 aberta, clique com o **botão DIREITO** no ícone de **Atualizar/Recarregar**.
 3.  Escolha a opção: **"Esvaziar cache e carregamento forçado"** (Empty cache and hard reload).
-
-!!! tip
-    Se o problema persistir, mude a porta no comando do servidor: `python server.py --port 8071 --root .`.

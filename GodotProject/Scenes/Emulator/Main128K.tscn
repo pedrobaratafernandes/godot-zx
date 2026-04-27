@@ -3,8 +3,12 @@
 [ext_resource type="Script" uid="uid://c3wfkbqprv2bu" path="res://Scripts/Emulator/Main128K.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://d6f8ujo14f5b" path="res://icon.svg" id="2_icon"]
 [ext_resource type="PackedScene" uid="uid://menuoverlay" path="res://Scenes/GameMenu/GameMenu.tscn" id="3_menu"]
+[ext_resource type="PackedScene" uid="uid://dn4w08xcdfday" path="res://Scenes/Dpad/dpad.tscn" id="4_dpad"]
+[ext_resource type="PackedScene" uid="uid://choexaxv04gx5" path="res://Scenes/Dpad/fire_button.tscn" id="5_fire"]
 
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_sound"]
+buffer_length = 0.1
+mix_rate = 44100.0
 
 [node name="Main128K" type="Control" unique_id=850767363]
 layout_mode = 3
@@ -47,15 +51,9 @@ color = Color(0.180392, 0.180392, 0.231373, 0.6)
 [node name="Display" type="TextureRect" parent="." unique_id=1889195075]
 texture_filter = 1
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -384.0
-offset_top = -288.0
-offset_right = 384.0
-offset_bottom = 288.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 expand_mode = 1
@@ -63,8 +61,30 @@ stretch_mode = 5
 
 [node name="ZXEmulator128K" type="ZXEmulator128K" parent="." unique_id=1777373805]
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1992140955]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamGenerator_sound")
 
 [node name="GameMenu" parent="." unique_id=965776266 instance=ExtResource("3_menu")]
 visible = false
+
+[node name="VirtualControls" parent="." unique_id=956952669 instance=ExtResource("4_dpad")]
+visible = false
+layout_mode = 1
+anchors_preset = 4
+anchor_left = 0.0
+anchor_right = 0.0
+offset_left = 147.295
+offset_right = 147.295
+grow_horizontal = 1
+
+[node name="FireButton" parent="." unique_id=673182142 instance=ExtResource("5_fire")]
+visible = false
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160.0
+offset_top = -80.0
+offset_right = -160.0
+offset_bottom = -80.0
+grow_horizontal = 0

@@ -3,7 +3,6 @@ extends CanvasLayer
 # This script handles the Pause Menu that appears when the user presses ESC.
 # It doesn't perform logic itself; instead, it emits signals that the Main emulator scenes handle.
 
-signal volume_changed(value: float)
 signal save_requested
 signal load_requested
 signal launcher_requested
@@ -12,7 +11,6 @@ signal reset_requested
 signal quit_requested
 signal fullscreen_requested
 
-@onready var volume_slider = %VolumeSlider
 @onready var save_button = %SaveButton
 @onready var load_button = %LoadButton
 @onready var launcher_button = %LauncherButton
@@ -25,7 +23,7 @@ signal fullscreen_requested
 
 func _ready():
 	hide()
-	volume_slider.value_changed.connect(_on_volume_changed)
+
 	save_button.pressed.connect(_on_save_pressed)
 	load_button.pressed.connect(_on_load_pressed)
 	launcher_button.pressed.connect(_on_launcher_pressed)
@@ -102,9 +100,6 @@ func _on_visibility_changed():
 
 func set_status(text: String):
 	status_label.text = text
-
-func _on_volume_changed(value):
-	volume_changed.emit(value)
 
 func _on_save_pressed():
 	await get_tree().create_timer(0.3).timeout

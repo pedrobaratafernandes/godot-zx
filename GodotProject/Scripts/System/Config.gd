@@ -1,13 +1,16 @@
 extends Node
 
-## Central Configuration Class
-## This class manages global paths for ROMs and Games, and tracks the currently selected game.
-## It uses static variables to act as a Global Singleton that doesn't strictly need to be an Autoload, 
-## though it is often used as one for initialization.
+# ==============================================================================
+# Central Configuration Class
+# ------------------------------------------------------------------------------
+# This class manages global paths for ROMs and Games, and tracks the currently 
+# selected game across scenes. It provides utility methods to load ROM banks.
+# ==============================================================================
 
 # --- ROM PATHS ---
 
 ## Standard 48K ROM (16KB) - The heart of the Sinclair ZX Spectrum 48K.
+## If empty, the project will look for internal defaults or specific files in res://roms/
 static var ROM_48K: String = ""
 
 ## Combined 128K ROM (32KB containing both Bank 0 and Bank 1).
@@ -23,15 +26,15 @@ static var ROM_128_1: String = "res://roms/128-1"
 
 # --- HELPER METHODS ---
 
-## Attempts to load 128K ROM data. 
-## It first looks for a combined 32KB file, then for separate bank files.
+## Attempts to load 128K ROM data (32KB). 
+## It automatically checks for a single combined file OR two separate 16KB bank files.
 static func get_128k_rom_data() -> PackedByteArray:
 	# 1. Try the main combined ROM path (from Inspector or default 128.rom)
 	if ROM_128K != "" and FileAccess.file_exists(ROM_128K):
 		return FileAccess.get_file_as_bytes(ROM_128K)
 	
 	# 2. Try the separate bank paths defined in variables (ROM_128_0 and ROM_128_1)
-	# Also tries lowercase and .rom extensions for maximum compatibility.
+	# This part tries various naming conventions (lowercase, with .rom, etc.)
 	var p0 = ""
 	if FileAccess.file_exists(ROM_128_0): p0 = ROM_128_0
 	elif FileAccess.file_exists(ROM_128_0 + ".rom"): p0 = ROM_128_0 + ".rom"
@@ -43,7 +46,7 @@ static func get_128k_rom_data() -> PackedByteArray:
 		var alt1 = "res://roms/ROM_128"
 		
 		# Check candidates for Bank 1
-		var candidates = [ROM_128_1, ROM_128_1 + ".rom", ROM_128_1.to_lower(), ROM_128_1.to_lower() + ".rom", 
+		var candidates = [ROM_128_1, ROM_128_1 + ".rom", ROM_128_1.to_lower(), ROM_128_1.to_lower() + ".rom",
 						  alt1, alt1 + ".rom", alt1.to_lower(), alt1.to_lower() + ".rom"]
 		
 		for c in candidates:
@@ -57,11 +60,15 @@ static func get_128k_rom_data() -> PackedByteArray:
 			var combined = PackedByteArray()
 			combined.append_array(data0)
 			combined.append_array(data1)
+			
+			# Spectrum 128K ROMs must be exactly 32768 bytes (2 x 16KB)
 			if combined.size() == 32768:
-				print("Config: Auto-discovered separate ROMs: ", p0, " and ", p1)
+				print("[Config] Auto-discovered separate 128K ROM banks: ", p0, " and ", p1)
 				return combined
+			else:
+				push_error("[Config] Error: Combined 128K ROM size is invalid: " + str(combined.size()) + " bytes.")
 
-	# 3. Last fallback: legacy filenames
+	# 3. Final fallback: legacy common filenames
 	var legacy_0 = "res://roms/128-0.rom"
 	var legacy_1 = "res://roms/128-1.rom"
 	if FileAccess.file_exists(legacy_0) and FileAccess.file_exists(legacy_1):
@@ -71,8 +78,10 @@ static func get_128k_rom_data() -> PackedByteArray:
 		combined.append_array(data0)
 		combined.append_array(data1)
 		if combined.size() == 32768:
+			print("[Config] Loaded 128K ROM from legacy filenames.")
 			return combined
 
+	push_error("[Config] Fatal: Could not find valid 128K ROM banks. Please ensure ROM files are in res://roms/")
 	return PackedByteArray()
 
 
@@ -81,23 +90,21 @@ static func get_128k_rom_data() -> PackedByteArray:
 ## Root directory where game files (.tap, .sna, .z80) are stored.
 static var GAMES_DIR: String = "res://games/"
 
-## The path of the game selected in the Launcher. 
+## The full path of the game selected in the Launcher, used by the emulator scenes.
 static var selected_game_path: String = ""
 
 # --- INITIALIZATION ---
 
-## Checks if essential directories exist and creates them if they don't.
-## This prevents "File not found" errors on fresh project installs.
+## Ensures essential project directories exist.
 static func setup():
 	if not DirAccess.dir_exists_absolute("res://roms/"):
 		DirAccess.make_dir_absolute("res://roms/")
-		print("Config: Created missing ROMs directory.")
+		print("[Config] Created missing 'roms' directory.")
 		
 	if not DirAccess.dir_exists_absolute(GAMES_DIR):
 		DirAccess.make_dir_absolute(GAMES_DIR)
-		print("Config: Created missing Games directory.")
+		print("[Config] Created missing 'games' directory at: ", GAMES_DIR)
 
 func _ready():
-	# Automatically run directory setup when the app starts if this script is an Autoload.
-	# This ensures the folder structure is always valid.
+	# Runs on startup if this script is an Autoload (Singleton).
 	setup()

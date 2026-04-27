@@ -1,7 +1,3 @@
-# Godot
-.godot/
-*.translation
-
 # Rust / Cargo
 target/
 Cargo.lock

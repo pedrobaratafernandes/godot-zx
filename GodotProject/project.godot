@@ -8,6 +8,8 @@
 
 config_version=5
 
+"ï»¿config_version"=5
+
 [animation]
 
 compatibility/default_parent_skeleton_in_mesh_instance_3d=true
@@ -15,9 +17,13 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Godot ZX"
-run/main_scene="uid://bqi8y8sh0svay"
+run/main_scene="uid://b8bgoqt5qin31"
 config/features=PackedStringArray("4.6")
 config/icon="uid://d6f8ujo14f5b"
+
+[audio]
+
+buses/default_bus_layout="uid://u6x32iptcgp5"
 
 [autoload]
 
@@ -25,8 +31,23 @@ Config="*res://Scripts/System/Config.gd"
 
 [display]
 
-window/size/viewport_height=640
+window/size/viewport_width=1280
+window/size/viewport_height=720
 window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[display.android]
+
+window/handheld/orientation=0
+
+[display.ios]
+
+window/handheld/orientation=0
+
+[display.mobile]
+
+window/handheld/orientation=0
+window/size/mode=4
 
 [input]
 
@@ -273,5 +294,5 @@ arrow_fire={
 
 [rendering]
 
-renderer/rendering_method="gl_compatibility"
-renderer/rendering_method.mobile="gl_compatibility"
+textures/canvas_textures/default_texture_filter=0
+renderer/rendering_method="mobile"

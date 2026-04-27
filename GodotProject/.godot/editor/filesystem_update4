@@ -1,0 +1,4 @@
+res://default_bus_layout.tres
+res://Scenes/Standalone/Main48K_Standalone.tscn
+res://Scripts/Standalone/Main48K_Standalone.gd
+res://Scenes/Standalone/Main128K_Standalone.tscn

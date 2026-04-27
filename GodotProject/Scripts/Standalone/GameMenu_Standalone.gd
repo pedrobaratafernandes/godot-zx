@@ -3,13 +3,11 @@ extends CanvasLayer
 # This script handles the Pause Menu for the Standalone (single-game) version.
 # It emits signals that are handled by the Standalone Main scripts.
 
-signal volume_changed(value: float)
 signal save_requested
 signal load_requested
 signal resume_requested
 signal fullscreen_requested
 
-@onready var volume_slider = %VolumeSlider
 @onready var save_button = %SaveButton
 @onready var load_button = %LoadButton
 @onready var quit_button = %QuitButton
@@ -21,7 +19,6 @@ func _ready():
 	hide()
 	
 	# Connect UI buttons to their respective signal handlers.
-	volume_slider.value_changed.connect(_on_volume_changed)
 	save_button.pressed.connect(_on_save_pressed)
 	load_button.pressed.connect(_on_load_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
@@ -93,9 +90,6 @@ func _on_visibility_changed():
 		# Wait a frame to ensure visibility is updated in the tree
 		await get_tree().process_frame
 		resume_button.grab_focus()
-
-func _on_volume_changed(value):
-	volume_changed.emit(value)
 
 func _on_save_pressed():
 	await get_tree().create_timer(0.3).timeout

@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://choexaxv04gx5"]
+
+[ext_resource type="Texture2D" uid="uid://ddnwkhfbgaixc" path="res://assets/dpad/button.png" id="1_nhpoe"]
+[ext_resource type="Texture2D" uid="uid://bm1l0ljkwakvd" path="res://assets/dpad/button_pressed.png" id="2_rgtt1"]
+
+[node name="FireButton" type="Control" unique_id=2145256927]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Button" type="TouchScreenButton" parent="." unique_id=342177909]
+scale = Vector2(1.4, 1.4)
+texture_normal = ExtResource("1_nhpoe")
+texture_pressed = ExtResource("2_rgtt1")
+passby_press = true
+action = "zx_1"
