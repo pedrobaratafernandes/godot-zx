@@ -59,13 +59,14 @@ func _ready():
         if OS.has_feature("mobile"):
             min_buffer_frames = 4096  # ~93ms (Safe for Android/iOS)
         elif OS.has_feature("web"):
-            min_buffer_frames = 2048  # ~46ms (Browser stability)
+            min_buffer_frames = 512   # ~11ms (Aggressive for Web)
         else:
-            min_buffer_frames = 1024  # ~23ms (Low latency for Desktop)
+            min_buffer_frames = 512   # ~11ms (Ultra-low latency for Desktop)
 
         var gen = AudioStreamGenerator.new()
         gen.mix_rate = 44100.0
-        gen.buffer_length = 0.3 if not OS.has_feature("mobile") else 0.5
+        # Shorter total buffer on Desktop/Web to prevent accumulation delay
+        gen.buffer_length = 0.1 if not OS.has_feature("mobile") else 0.5
         audio_player.stream = gen
         audio_player.play()
         audio_playback = audio_player.get_stream_playback()
@@ -204,7 +205,8 @@ func _update_audio():
 
     # 5. Latency Control:
     # Trims the buffer if it grows too large to keep audio in sync with video
-    var max_latency = min_buffer_frames * 3
+    # We allow a bit more room (x6) to avoid skips, but keep it tight on Desktop
+    var max_latency = min_buffer_frames * 6 
     if audio_buffer.size() > max_latency:
         audio_buffer = audio_buffer.slice(audio_buffer.size() - min_buffer_frames)
 
