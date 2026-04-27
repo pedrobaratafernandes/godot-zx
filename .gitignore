@@ -13,5 +13,6 @@ Cargo.lock
 
 #keep files
 !GodotProject/games/znake.tap
+!GodotProject/games/znake.png
 !GodotProject/games/README.md
 

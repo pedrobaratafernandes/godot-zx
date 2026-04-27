@@ -12,3 +12,4 @@ res://Scripts/Emulator/VirtualKeyboard.gd
 res://Scenes/Dpad/virtual_keyboard.tscn
 res://Scenes/GameMenu/GameMenu.tscn
 res://Scripts/GameMenu/GameMenu.gd
+res://Scripts/System/Config.gd
