@@ -2,13 +2,15 @@
 name = "godot-zx"
 version = "0.1.0"
 edition = "2021"
+rust-version = "1.97"
 
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies.godot]
-git = "https://github.com/godot-rust/gdext"
-branch = "master"
+# Versão oficial fixa do crates.io. Não usar o branch master: a partir de 2026-09-20 deixou de compilar para wasm32.
+# Para atualizar: mudar a versão, correr os builds (incluindo o Web) e testar no Godot.
+version = "=0.5.5"
 features = ["experimental-wasm", "lazy-function-tables"]
 
 [dependencies]

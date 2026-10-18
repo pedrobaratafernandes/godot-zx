@@ -21,7 +21,7 @@ If you are developing directly on a Windows machine, use the batch script. It pe
 ```
 
 ## Build for Web (WASM)
-There are two ways to build for the web. The Docker method is recommended as it handles all toolchain dependencies (Emscripten, Rust Nightly) automatically.
+There are two ways to build for the web. The Docker method is recommended as it handles all toolchain dependencies (Emscripten, Rust at the version fixed in `rust-toolchain.toml`) automatically.
 
 ### Using Docker (Recommended)
 This script builds both threaded and non-threaded versions of the WASM binary:
@@ -35,7 +35,7 @@ sudo usermod -aG docker $USER
 ```
 
 ### Native Build
-Requires Rust Nightly and Emscripten installed on your system:
+Requires Emscripten 4.0.20 installed on your system (Rust is installed automatically at the version fixed in `rust-toolchain.toml`):
 ```bash
 bash build/linux/build_web.sh
 ```

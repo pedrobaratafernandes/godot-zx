@@ -21,7 +21,7 @@ Se estiver a desenvolver diretamente numa máquina Windows, utilize o ficheiro b
 ```
 
 ## Compilar para Web (WASM)
-Existem duas formas de compilar para a web. O método via Docker é recomendado, pois gere todas as dependências (Emscripten, Rust Nightly) automaticamente.
+Existem duas formas de compilar para a web. O método via Docker é recomendado, pois gere todas as dependências (Emscripten, Rust na versão fixa em `rust-toolchain.toml`) automaticamente.
 
 ### Usando Docker (Recomendado)
 Este script compila tanto a versão com threads quanto a versão sem threads:
@@ -35,7 +35,7 @@ sudo usermod -aG docker $USER
 ```
 
 ### Compilação Nativa
-Requer Rust Nightly e Emscripten instalados no sistema:
+Requer Emscripten 4.0.20 instalado no sistema (o Rust é instalado automaticamente na versão fixa em `rust-toolchain.toml`):
 ```bash
 bash build/linux/build_web.sh
 ```

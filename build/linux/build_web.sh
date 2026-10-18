@@ -8,15 +8,13 @@ set -e
 # Change to project root
 cd "$(dirname "$0")/../.."
 
-echo "Checking Rust Nightly and components..."
-rustup toolchain install nightly
-rustup component add rust-src --toolchain nightly
-rustup target add wasm32-unknown-emscripten --toolchain nightly
+echo "Installing the Rust version fixed in rust-toolchain.toml (with rust-src and wasm target)..."
+rustup toolchain install
 
-echo "Building for Web (Release) using Nightly -Zbuild-std..."
+echo "Building for Web (Release) using -Zbuild-std..."
 # Note: Linker flags are managed in .cargo/config.toml
 
-cargo +nightly build --release -Zbuild-std --target wasm32-unknown-emscripten
+RUSTC_BOOTSTRAP=1 cargo build --release -Zbuild-std --target wasm32-unknown-emscripten
 
 # Create bin directory if it doesn't exist
 mkdir -p GodotProject/bin

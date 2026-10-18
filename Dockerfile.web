@@ -1,19 +1,20 @@
-# Use the official Emscripten image as base
-FROM emscripten/emsdk:latest
+# Emscripten fixo na mesma versão dos export templates Web do Godot 4.6.2.
+# Ao mudar de versão do Godot: exportar para Web, abrir no browser e ver na consola
+# "Build configuration: Emscripten X.Y.Z" — usar essa versão aqui.
+FROM emscripten/emsdk:4.0.20
 
 # Install system dependencies for bindgen
 RUN apt-get update && apt-get install -y clang libclang-dev gcc-multilib g++-multilib && rm -rf /var/lib/apt/lists/*
 
-# Install Rust Nightly
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly
+# Install rustup, then the fixed Rust version (with rust-src and wasm target) from rust-toolchain.toml
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain none
 ENV PATH="/root/.cargo/bin:${PATH}"
-
-# Add components and target
-RUN rustup component add rust-src --toolchain nightly
-RUN rustup target add wasm32-unknown-emscripten --toolchain nightly
-
-# Set working directory
 WORKDIR /src
+COPY rust-toolchain.toml /src/rust-toolchain.toml
+RUN rustup toolchain install
+
+# Allow unstable flags (-Zbuild-std, -Z rustflags) on the stable compiler
+ENV RUSTC_BOOTSTRAP=1
 
 # Default command: build the project using -Zbuild-std
-CMD ["cargo", "+nightly", "build", "--release", "-Zbuild-std=std,panic_abort", "--target", "wasm32-unknown-emscripten"]
+CMD ["cargo", "build", "--release", "-Zbuild-std=std,panic_abort", "--target", "wasm32-unknown-emscripten"]
