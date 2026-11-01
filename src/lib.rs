@@ -5,6 +5,11 @@ use godot::prelude::*;
 // 'emulator_node' contains the actual Godot Nodes that can be used in scenes
 mod host;
 mod emulator_node;
+mod formats;
+mod tape_activity;
+
+#[cfg(test)]
+mod tests;
 
 /// This is the main structure for our GDExtension library.
 /// It acts as the "anchor" point that Godot looks for when loading the library.

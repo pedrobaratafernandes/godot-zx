@@ -65,7 +65,8 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 0
 
-[node name="Dpad" type="Node2D" parent="." unique_id=1787870966]
+[node name="Dpad" type="CanvasGroup" parent="." unique_id=1787870966]
+self_modulate = Color(2.6, 2.6, 2.6, 0.8)
 scale = Vector2(2.3, 2.3)
 
 [node name="Center" type="Sprite2D" parent="Dpad" unique_id=1213473660]

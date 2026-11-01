@@ -1,12 +1,20 @@
+use crate::formats;
+use crate::tape_activity::TapeActivity;
 use crate::host::{GodotHost, GodotHostContext, GodotRomSet};
 use core::time::Duration;
 use godot::classes::{Image, ImageTexture};
 use godot::prelude::*;
-use rustzx_core::host::BufferCursor;
 use rustzx_core::zx::keys::ZXKey;
 use rustzx_core::zx::machine::ZXMachine;
 use rustzx_core::{EmulationMode, Emulator, RustzxSettings};
 use std::collections::VecDeque;
+use std::time::Instant;
+
+/// Wall-clock time per Godot frame spent on extra frames while a tape loads.
+/// ~12 ms keeps a 60 fps game responsive; the machine runs as fast as the CPU allows.
+const TURBO_TIME_BUDGET: Duration = Duration::from_millis(12);
+/// Safety cap on extra frames per Godot frame.
+const TURBO_MAX_FRAMES: u32 = 500;
 
 /// A simple command to simulate a key press over multiple frames.
 /// This is used to "type" commands into the emulator (like 'LOAD ""')
@@ -44,6 +52,8 @@ pub struct ZXEmulatorCore {
     command_queue: VecDeque<VirtualKeyCommand>,
     paused: bool,
     machine: ZXMachine,
+    /// Watches the loaded tape to turn on turbo loading while it plays.
+    tape_activity: Option<TapeActivity>,
 }
 
 impl ZXEmulatorCore {
@@ -54,12 +64,14 @@ impl ZXEmulatorCore {
             command_queue: VecDeque::new(),
             paused: false,
             machine: ZXMachine::Sinclair48K,
+            tape_activity: None,
         }
     }
 
     /// Initializes the emulator with specific machine settings (48K or 128K).
     pub fn create(&mut self, machine: ZXMachine) {
         self.machine = machine;
+        self.tape_activity = None;
         let settings = RustzxSettings {
             machine,
             emulation_mode: EmulationMode::FrameCount(1),
@@ -98,6 +110,25 @@ impl ZXEmulatorCore {
         if let Some(ref mut emulator) = self.emulator {
             // Run enough CPU cycles to match the elapsed real time.
             let _ = emulator.emulate_frames(Duration::from_secs_f32(delta));
+
+            // Turbo load: while a tape is playing, emulate as many extra frames as
+            // fit in the time budget, so slow (turbo/custom-loader) tapes load in seconds.
+            if let Some(ref mut activity) = self.tape_activity {
+                let started = Instant::now();
+                let mut frames = 0;
+                while activity.on_frame()
+                    && frames < TURBO_MAX_FRAMES
+                    && started.elapsed() < TURBO_TIME_BUDGET
+                {
+                    let _ = emulator.emulate_frames(Duration::from_secs(1));
+                    frames += 1;
+                }
+                if frames > 0 {
+                    // The sped-up loading noise would only be a burst of garbage: drop it.
+                    while emulator.next_audio_sample().is_some() {}
+                }
+            }
+
             // Update the RGB buffer so Godot can see the new frame.
             self.update_texture();
         }
@@ -265,24 +296,25 @@ impl ZXEmulatorCore {
         }
     }
 
-    /// Loads a standard .SNA snapshot file.
+    /// Loads a snapshot file. SZX is detected by its "ZXST" header; anything else is treated as .SNA.
     pub fn load_snapshot(&mut self, data: &[u8]) {
         if let Some(ref mut emulator) = self.emulator {
-            let asset = BufferCursor::new(data.to_vec());
-            if let Err(e) = emulator.load_snapshot(rustzx_core::host::Snapshot::Sna(asset)) {
-                godot_error!("Failed to load SNA snapshot: {:?}", e);
+            if let Err(e) = emulator.load_snapshot(formats::snapshot_from_bytes(data)) {
+                godot_error!("Failed to load snapshot: {:?}", e);
             }
         }
     }
 
 
 
-    /// Loads a .TAP tape file into the virtual tape recorder.
+    /// Loads a tape file into the virtual tape recorder.
+    /// TZX is detected by its "ZXTape!" header; anything else is treated as .TAP.
     pub fn load_tape(&mut self, data: &[u8]) {
         if let Some(ref mut emulator) = self.emulator {
-            let asset = BufferCursor::new(data.to_vec());
-            if let Err(e) = emulator.load_tape(rustzx_core::host::Tape::Tap(asset)) {
-                godot_error!("Failed to load tape: {:?}", e);
+            let (tape, progress) = formats::tape_from_bytes(data);
+            match emulator.load_tape(tape) {
+                Ok(()) => self.tape_activity = Some(TapeActivity::new(progress)),
+                Err(e) => godot_error!("Failed to load tape: {:?}", e),
             }
         }
     }

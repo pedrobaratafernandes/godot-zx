@@ -46,7 +46,7 @@ The **Config** centralized static class manages:
 
 ## Extra Features
 
-*   **.TAP Optimization**: The emulator is now exclusively optimized for **.tap** files for reliable cassette loading.
+*   **Tape formats**: **.tap** and **.tzx** are supported. TAP files, and TZX files with standard-speed blocks only (most of them), load instantly (fastload). TZX files with turbo blocks or custom loaders (e.g. Skool Daze) cannot use fastload: the emulator then runs at full speed while the tape plays (*turbo load*, no sound), so a 4-minute tape loads in about 30 seconds.
 *   **Gamepad Ready**: All menus and the emulator are mappable via Godot's Input Map.
 *   **Mouse Support**: Full support for mouse input (Kempston Mouse emulation) in games and menus.
 *   **Steam Ready**: Structure prepared to generate single executables with an embedded game using the Standalone scene.

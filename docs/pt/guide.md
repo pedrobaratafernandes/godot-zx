@@ -46,7 +46,7 @@ A classe estática centralizada **Config** gere:
 
 ## Funcionalidades Extras
 
-*   **Otimização .TAP**: O emulador está agora focado e otimizado para ficheiros **.tap** para garantir a máxima fidelidade no carregamento.
+*   **Formatos de fita**: são suportados **.tap** e **.tzx**. Os TAP, e os TZX só com blocos de velocidade normal (a maioria), carregam instantaneamente (fastload). Os TZX com blocos turbo ou loaders próprios (ex.: Skool Daze) não podem usar fastload: o emulador corre então à velocidade máxima enquanto a fita toca (*turbo load*, sem som), e uma fita de 4 minutos carrega em cerca de 30 segundos.
 *   **Gamepad Ready**: Todos os menus e o emulador são mapeáveis através do Input Map do Godot.
 *   **Suporte a Rato**: Suporte completo para input de rato (emulação Kempston Mouse) em jogos e menus.
 *   **Steam Ready**: Estrutura preparada para gerar executáveis únicos (.exe / .x86_64) com um jogo embutido usando a cena Standalone.

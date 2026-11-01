@@ -1,1 +1,5 @@
 res://Scenes/Standalone/Main48K_Standalone.tscn
+res://Scripts/Emulator/Main48K.gd
+res://Scripts/Emulator/Main128K.gd
+res://Scripts/Standalone/Main48K_Standalone.gd
+res://Scripts/Standalone/Main128K_Standalone.gd

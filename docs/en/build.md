@@ -39,3 +39,18 @@ Requires Emscripten 4.0.20 installed on your system (Rust is installed automatic
 ```bash
 bash build/linux/build_web.sh
 ```
+
+## Automated tests
+The tests drive the emulator core without Godot (no need to build the extension or open the editor):
+```bash
+cargo test
+```
+What is checked:
+- **TAP** (48K and 128K, with and without fastload): `znake.tap` ends up loaded in memory.
+- **TZX** (48K and 128K): `znake.tap` is converted to TZX during the test and must load with fastload. A TZX with a turbo block must play in real time.
+- **Turbo load**: the tape-playing detector covers the whole load, turns off when the tape ends or stalls, and barely acts with fastload.
+- **SZX** (48K and 128K, with and without zlib compression): the same state loaded from SNA and from SZX runs identically, frame by frame.
+- **SNA**: saving and restoring a running game (the save-state format).
+- **Every game in `GodotProject/games/`**: each `.tap`, `.tzx`, `.sna` or `.szx` file must load without errors and show a picture 20 emulated seconds after the tape stops. Files with `128` in the name run in 128K mode. To test a new game, just copy it into that folder.
+
+The tests live in `src/tests.rs`.

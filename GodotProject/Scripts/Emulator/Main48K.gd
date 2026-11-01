@@ -59,6 +59,8 @@ func _ready():
 		# Shorter total buffer on Desktop/Web to prevent accumulation delay
 		gen.buffer_length = 0.1 if not OS.has_feature("mobile") else 0.5
 		audio_player.stream = gen
+		# Web defaults to "Sample" playback, which an AudioStreamGenerator cannot use.
+		audio_player.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
 		audio_player.play()
 		audio_playback = audio_player.get_stream_playback()
 	
@@ -76,7 +78,7 @@ func _ready():
 	if has_node("VirtualKeyboard"):
 		$VirtualKeyboard.zx_key_event.connect(func(key, pressed): emulator.send_key(key, pressed))
 	
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	_capture_mouse()
 	
 	var game_name = Config.selected_game_path.get_file()
 	if game_name == "": game_name = "None"
@@ -101,7 +103,7 @@ func _load_assets():
 		var ext = game_path.get_extension().to_lower()
 		var data = FileAccess.get_file_as_bytes(game_path)
 		match ext:
-			"tap":
+			"tap", "tzx":
 				emulator.load_tape(data)
 				emulator.start_tape_load()
 	else:
@@ -174,7 +176,7 @@ func _toggle_pause():
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	else:
 		menu.hide()
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		_capture_mouse()
 
 func _get_save_path() -> String:
 	var game_path = Config.selected_game_path
@@ -206,7 +208,25 @@ func _toggle_fullscreen():
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 
+var _capture_on_click := false
+
+## Hides and locks the mouse (Kempston mouse). On the web the browser refuses
+## pointer lock without a user gesture, so it is deferred to the next click.
+## Mobile browsers have no pointer lock at all.
+func _capture_mouse():
+	if OS.has_feature("web_android") or OS.has_feature("web_ios"):
+		return
+	if OS.has_feature("web"):
+		_capture_on_click = true
+	else:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
 func _input(event: InputEvent):
+	# Browsers only grant pointer lock inside a click handler.
+	if _capture_on_click and event is InputEventMouseButton and event.pressed and not emulator.is_paused():
+		_capture_on_click = false
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
 	# 1. CAPS LOCK TOGGLE (Mapping Profile Switch)
 	if event is InputEventKey and event.keycode == KEY_CAPSLOCK and event.pressed and not event.is_echo():
 		use_secondary_mapping = not use_secondary_mapping

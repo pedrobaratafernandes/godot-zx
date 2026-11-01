@@ -3,6 +3,12 @@
 version = 4
 
 [[package]]
+name = "adler"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f26201604c87b1e01bd3d98f8d5d9a8fcbb815e8cedb41ffccbeb4bf593a35fe"
+
+[[package]]
 name = "autocfg"
 version = "1.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -11,8 +17,7 @@ checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 [[package]]
 name = "aym"
 version = "0.16.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ffc16dd774830ad8cf5e3951ec459fd3c8d27e4eb167a97efc664bd80d2b4f24"
+source = "git+https://github.com/ArjunNair/rustzx?rev=b169492968ebc11ec9b6276b6ad6f92bce6154ef#b169492968ebc11ec9b6276b6ad6f92bce6154ef"
 dependencies = [
  "libm",
  "num-traits",
@@ -200,6 +205,7 @@ name = "godot-zx"
 version = "0.1.0"
 dependencies = [
  "godot",
+ "miniz_oxide",
  "rustzx-core",
  "rustzx-z80",
 ]
@@ -245,6 +251,15 @@ name = "libm"
 version = "0.2.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b6d2cec3eae94f9f509c767b45932f1ada8350c4bdb85af2fcab4a3c14807981"
+
+[[package]]
+name = "miniz_oxide"
+version = "0.7.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b8a240ddb74feaf34a79a7add65a741f3167852fba007066dcac1ca548d89c08"
+dependencies = [
+ "adler",
+]
 
 [[package]]
 name = "nanoserde"
@@ -297,8 +312,7 @@ dependencies = [
 [[package]]
 name = "rustzx-core"
 version = "0.16.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7d81c68a1ad6f72670238661ffaca70c1030d8bc0090d12072e7e44715073ff6"
+source = "git+https://github.com/ArjunNair/rustzx?rev=b169492968ebc11ec9b6276b6ad6f92bce6154ef#b169492968ebc11ec9b6276b6ad6f92bce6154ef"
 dependencies = [
  "aym",
  "bitflags",
@@ -306,6 +320,7 @@ dependencies = [
  "enum_dispatch",
  "from_variants",
  "lazy_static",
+ "miniz_oxide",
  "rustzx-z80",
  "strum",
 ]
@@ -313,8 +328,7 @@ dependencies = [
 [[package]]
 name = "rustzx-z80"
 version = "0.16.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2c75eeaab634ecd84e07fdb7c385efded6e86aed83c3935bb12a971e2139e7e2"
+source = "git+https://github.com/ArjunNair/rustzx?rev=b169492968ebc11ec9b6276b6ad6f92bce6154ef#b169492968ebc11ec9b6276b6ad6f92bce6154ef"
 
 [[package]]
 name = "spin"

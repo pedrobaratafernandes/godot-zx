@@ -74,8 +74,8 @@ func _scan_games():
 		while file_name != "":
 			if not dir.current_is_dir():
 				var ext = file_name.get_extension().to_lower()
-				# We support Tapes (.tap) and Screenshots (.scr)
-				if ext in ["tap"]:
+				# We support tapes (.tap, .tzx)
+				if ext in ["tap", "tzx"]:
 					game_files.append(file_name)
 					game_list.add_item(file_name)
 			file_name = dir.get_next()

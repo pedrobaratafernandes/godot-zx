@@ -14,8 +14,13 @@ version = "=0.5.5"
 features = ["experimental-wasm", "lazy-function-tables"]
 
 [dependencies]
-rustzx-core = { version = "0.16.0", features = ["sound", "ay", "autoload", "embedded-roms", "full"] }
-rustzx-z80 = "0.16.0"
+# Fork do ArjunNair (base 0.16.0 + suporte TZX e SZX). Fixado num commit para builds reprodutíveis.
+rustzx-core = { git = "https://github.com/ArjunNair/rustzx", rev = "b169492968ebc11ec9b6276b6ad6f92bce6154ef", features = ["sound", "ay", "autoload", "embedded-roms", "full"] }
+rustzx-z80 = { git = "https://github.com/ArjunNair/rustzx", rev = "b169492968ebc11ec9b6276b6ad6f92bce6154ef" }
+
+[dev-dependencies]
+# Only used by the tests to build zlib-compressed SZX snapshots (same crate rustzx-core uses to read them).
+miniz_oxide = "0.7"
 
 [features]
 nothreads = ["godot/experimental-wasm-nothreads"]
@@ -25,3 +30,7 @@ panic = "abort"
 opt-level = 3
 strip = true
 lto = true
+
+# The tests emulate minutes of Spectrum time; without optimisation they are ~20x slower.
+[profile.test]
+opt-level = 3

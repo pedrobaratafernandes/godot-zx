@@ -13,8 +13,8 @@ extends Control
 @onready var menu: CanvasLayer = $GameMenu
 
 @export_category("Standalone Configuration")
-## The specific Spectrum game file (.tap) to load.
-@export_file("*.tap") var game_path: String = ""
+## The specific Spectrum game file (.tap or .tzx) to load.
+@export_file("*.tap", "*.tzx") var game_path: String = ""
 
 @export var web_autoload: bool = false:
     set(value):
@@ -68,6 +68,8 @@ func _ready():
         # Shorter total buffer on Desktop/Web to prevent accumulation delay
         gen.buffer_length = 0.1 if not OS.has_feature("mobile") else 0.5
         audio_player.stream = gen
+        # Web defaults to "Sample" playback, which an AudioStreamGenerator cannot use.
+        audio_player.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
         audio_player.play()
         audio_playback = audio_player.get_stream_playback()
     
@@ -92,7 +94,7 @@ func _ready():
     if game_name == "": game_name = "Standalone Game"
     menu.set_status("Machine: 48K | Game: " + game_name)
     
-    Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+    _capture_mouse()
     
     if web_autoload and OS.has_feature("web") and game_path == "":
         _try_web_autoload()
@@ -114,12 +116,12 @@ func _load_standalone_game():
         var ext = game_path.get_extension().to_lower()
         var data = FileAccess.get_file_as_bytes(game_path)
         
-        if ext == "tap":
-            print("[Standalone] Loading TAP file: ", game_path)
+        if ext in ["tap", "tzx"]:
+            print("[Standalone] Loading tape file: ", game_path)
             emulator.load_tape(data)
             emulator.start_tape_load()
         else:
-            push_error("[Standalone] Error: Only .tap files are supported.")
+            push_error("[Standalone] Error: Only .tap and .tzx files are supported.")
 
 
 func _load_standalone_roms():
@@ -226,7 +228,7 @@ func _toggle_pause():
         Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
     else:
         menu.hide()
-        Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+        _capture_mouse()
 
 
 func _get_save_path() -> String:
@@ -262,7 +264,25 @@ func _toggle_fullscreen():
         DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 
 
+var _capture_on_click := false
+
+## Hides and locks the mouse (Kempston mouse). On the web the browser refuses
+## pointer lock without a user gesture, so it is deferred to the next click.
+## Mobile browsers have no pointer lock at all.
+func _capture_mouse():
+    if OS.has_feature("web_android") or OS.has_feature("web_ios"):
+        return
+    if OS.has_feature("web"):
+        _capture_on_click = true
+    else:
+        Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
 func _input(event: InputEvent):
+    # Browsers only grant pointer lock inside a click handler.
+    if _capture_on_click and event is InputEventMouseButton and event.pressed and not emulator.is_paused():
+        _capture_on_click = false
+        Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
     if event.is_action_pressed("ui_cancel"):
         _toggle_pause()
         get_viewport().set_input_as_handled()

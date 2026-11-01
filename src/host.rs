@@ -1,5 +1,9 @@
-use godot::prelude::*;
-use rustzx_core::host::{FrameBuffer, FrameBufferSource, Host, HostContext, Stopwatch, StubIoExtender, StubDebugInterface, BufferCursor};
+use rustzx_core::host::{
+    BufferCursor, FrameBuffer, FrameBufferSource, Host, HostContext, LoadableAsset, SeekFrom,
+    SeekableAsset, Stopwatch, StubDebugInterface, StubIoExtender,
+};
+use std::cell::Cell;
+use std::rc::Rc;
 use rustzx_core::zx::video::colors::{ZXBrightness, ZXColor};
 use core::time::Duration;
 use std::time::Instant;
@@ -11,11 +15,47 @@ pub struct GodotHost;
 
 impl Host for GodotHost {
     type Context = GodotHostContext;
-    type TapeAsset = BufferCursor<Vec<u8>>;
+    type TapeAsset = TapeCursor;
     type FrameBuffer = GodotFrameBuffer;
     type EmulationStopwatch = GodotStopwatch;
     type IoExtender = StubIoExtender;
     type DebugInterface = StubDebugInterface;
+}
+
+/// Tape data that remembers how far into it the emulator has read.
+/// rustzx keeps its tape player private, so this is how we know a tape is
+/// being played (see `tape_activity`).
+pub struct TapeCursor {
+    inner: BufferCursor<Vec<u8>>,
+    position: usize,
+    furthest: Rc<Cell<usize>>,
+}
+
+impl TapeCursor {
+    /// Returns the cursor plus a shared handle to the furthest byte read so far.
+    pub fn new(data: Vec<u8>) -> (Self, Rc<Cell<usize>>) {
+        let furthest = Rc::new(Cell::new(0));
+        let cursor = Self { inner: BufferCursor::new(data), position: 0, furthest: furthest.clone() };
+        (cursor, furthest)
+    }
+}
+
+impl LoadableAsset for TapeCursor {
+    fn read(&mut self, buf: &mut [u8]) -> Result<usize, rustzx_core::error::IoError> {
+        let n = self.inner.read(buf)?;
+        self.position += n;
+        if self.position > self.furthest.get() {
+            self.furthest.set(self.position);
+        }
+        Ok(n)
+    }
+}
+
+impl SeekableAsset for TapeCursor {
+    fn seek(&mut self, pos: SeekFrom) -> Result<usize, rustzx_core::error::IoError> {
+        self.position = self.inner.seek(pos)?;
+        Ok(self.position)
+    }
 }
 
 /// A simple context object required by the Host trait.

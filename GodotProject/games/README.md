@@ -6,6 +6,7 @@ This directory is intended for ZX Spectrum game files.
 
 Place your ZX Spectrum game files here. Supported formats are:
 - **.tap** (tape)
+- **.tzx** (tape)
 - **.sna** (snapshot)
 - **.z80** (snapshot)
 

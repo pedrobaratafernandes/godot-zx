@@ -39,3 +39,18 @@ Requer Emscripten 4.0.20 instalado no sistema (o Rust é instalado automaticamen
 ```bash
 bash build/linux/build_web.sh
 ```
+
+## Testes automáticos
+Os testes correm o núcleo do emulador sem abrir o Godot (não é preciso compilar a extensão nem ter o editor):
+```bash
+cargo test
+```
+O que é verificado:
+- **TAP** (48K e 128K, com e sem fastload): o jogo `znake.tap` fica carregado na memória.
+- **TZX** (48K e 128K): o `znake.tap` é convertido para TZX durante o teste e tem de carregar com fastload. Um TZX com bloco turbo tem de tocar em tempo real.
+- **Turbo load**: o detetor de fita a tocar cobre o carregamento todo, desliga-se quando a fita acaba ou pára, e quase não atua com fastload.
+- **SZX** (48K e 128K, com e sem compressão zlib): o mesmo estado carregado por SNA e por SZX corre de forma idêntica, frame a frame.
+- **SNA**: gravar e repor um jogo a correr (é o formato dos save states).
+- **Todos os jogos da pasta `GodotProject/games/`**: cada ficheiro `.tap`, `.tzx`, `.sna` ou `.szx` tem de carregar sem erros e mostrar imagem 20 segundos emulados depois de a fita parar. Ficheiros com `128` no nome correm em modo 128K. Para testar um jogo novo basta copiá-lo para essa pasta.
+
+Os testes estão em `src/tests.rs`.
