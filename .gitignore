@@ -15,3 +15,6 @@ target/
 !GodotProject/games/znake.png
 !GodotProject/games/README.md
 
+# Godot exports in GodotProject (ignore files, keep folders via .gitkeep)
+/GodotProject/build/*/*
+!/GodotProject/build/*/.gitkeep

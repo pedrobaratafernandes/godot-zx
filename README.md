@@ -1,6 +1,14 @@
 # Godot ZX Spectrum Emulator (Rust GDExtension)
 
-A high-performance ZX Spectrum emulator integrated into Godot 4.3+ using Rust and GDExtension.
+[![CI](https://github.com/pedrobaratafernandes/godot-zx/actions/workflows/ci.yml/badge.svg)](https://github.com/pedrobaratafernandes/godot-zx/actions/workflows/ci.yml)
+[![Docs](https://github.com/pedrobaratafernandes/godot-zx/actions/workflows/deploy_docs.yml/badge.svg)](https://pedrobaratafernandes.github.io/godot-zx/)
+[![Release](https://img.shields.io/github/v/release/pedrobaratafernandes/godot-zx?include_prereleases&sort=semver)](https://github.com/pedrobaratafernandes/godot-zx/releases)
+[![License: MIT](https://img.shields.io/github/license/pedrobaratafernandes/godot-zx)](LICENSE)
+![Godot](https://img.shields.io/badge/Godot-4.7.2-478cbf?logo=godotengine&logoColor=white)
+![Rust](https://img.shields.io/badge/Rust-1.97.1-orange?logo=rust)
+![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20Linux%20%7C%20Web-informational)
+
+A high-performance ZX Spectrum emulator integrated into Godot 4.7.2 using Rust and GDExtension.
 
 ## Documentation
 The full documentation is available at:
@@ -11,7 +19,7 @@ The full documentation is available at:
 
 ---
 
-Emulador de ZX Spectrum de alta performance para Godot 4.3+.
+Emulador de ZX Spectrum de alta performance para Godot 4.7.2.
 
 ## Documentação
 O manual completo está disponível em:

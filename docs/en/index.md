@@ -1,6 +1,6 @@
 # Introduction
 
-A high-performance ZX Spectrum emulator integrated into Godot 4.3+ using Rust and GDExtension. This project is highly modular, optimized for **.tap** files, and Steam-ready with a dedicated standalone mode and full gamepad support.
+A high-performance ZX Spectrum emulator integrated into Godot 4.7.2 using Rust and GDExtension. This project is highly modular, optimized for **.tap** files, and Steam-ready with a dedicated standalone mode and full gamepad support.
 
 ## Documentation Index
 
@@ -14,7 +14,7 @@ A high-performance ZX Spectrum emulator integrated into Godot 4.3+ using Rust an
 *   **Core Engine**: rustzx-core (Rust)
 *   **Godot Bridge**: godot-rust (GDExtension)
 *   **Rust Version**: 1.95.0
-*   **Godot Version**: 4.3 or higher
+*   **Godot Version**: 4.7.2
 *   **Supported Formats**: Exclusively **.tap** (Tape)
 
 ## Technical Architecture

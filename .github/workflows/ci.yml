@@ -1,0 +1,104 @@
+# CI/CD for Godot ZX
+#
+# On every push to main / pull request:
+#   1. test     - core tests (cargo test --release)
+#   2. windows  - GodotProject/bin/godot_zx.dll
+#   3. linux    - GodotProject/bin/libgodot_zx.so
+#   4. web      - GodotProject/bin/godot_zx.wasm + godot_zx.threads.wasm (Docker, Emscripten)
+#
+# On a tag v* (e.g. git tag v0.2.0 && git push origin v0.2.0):
+#   5. release  - GitHub release with GodotProject-<tag>.zip, containing the
+#                 GodotProject folder and the 4 libraries built above.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+    paths-ignore:
+      - "docs/**"
+      - "mkdocs.yml"
+      - "**.md"
+  pull_request:
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: Swatinem/rust-cache@v2.9.3
+      - name: Tests
+        run: cargo test --release
+
+  windows:
+    needs: test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: Swatinem/rust-cache@v2.9.3
+      - run: cargo build --release
+      - uses: actions/upload-artifact@v7
+        with:
+          name: lib-windows
+          path: target/release/godot_zx.dll
+          if-no-files-found: error
+
+  linux:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: Swatinem/rust-cache@v2.9.3
+      - run: bash build/linux/build_linux.sh
+      - uses: actions/upload-artifact@v7
+        with:
+          name: lib-linux
+          path: GodotProject/bin/libgodot_zx.so
+          if-no-files-found: error
+
+  web:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: bash build/linux/build_web_docker.sh
+      - uses: actions/upload-artifact@v7
+        with:
+          name: lib-web
+          path: |
+            GodotProject/bin/godot_zx.wasm
+            GodotProject/bin/godot_zx.threads.wasm
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [windows, linux, web]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: lib-*
+          path: GodotProject/bin
+          merge-multiple: true
+      - name: Zip GodotProject
+        run: |
+          rm -f GodotProject/bin/~*
+          # shader_cache is rebuilt by Godot on first open, and its very long paths
+          # break extraction on Windows (260-char path limit).
+          zip -qr "GodotProject-${GITHUB_REF_NAME}.zip" GodotProject -x "GodotProject/.godot/shader_cache/*"
+          unzip -l "GodotProject-${GITHUB_REF_NAME}.zip" | tail -1
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" "GodotProject-${GITHUB_REF_NAME}.zip" \
+            --title "$GITHUB_REF_NAME" --generate-notes \
+            || gh release upload "$GITHUB_REF_NAME" "GodotProject-${GITHUB_REF_NAME}.zip" --clobber

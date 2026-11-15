@@ -1,6 +1,6 @@
 # Introdução
 
-Um emulador de ZX Spectrum de alta performance integrado no Godot 4.3+ através de Rust e GDExtension. Este projeto foi desenhado para ser modular, focado na estabilidade com ficheiros **.tap** e pronto para distribuição standalone (Steam/Itch.io) com suporte total para Gamepads.
+Um emulador de ZX Spectrum de alta performance integrado no Godot 4.7.2 através de Rust e GDExtension. Este projeto foi desenhado para ser modular, focado na estabilidade com ficheiros **.tap** e pronto para distribuição standalone (Steam/Itch.io) com suporte total para Gamepads.
 
 ## Índice da Documentação
 
@@ -14,7 +14,7 @@ Um emulador de ZX Spectrum de alta performance integrado no Godot 4.3+ através 
 *   **Core**: rustzx-core (Rust)
 *   **Ponte Godot**: godot-rust (GDExtension)
 *   **Versão do Rust**: 1.95.0
-*   **Versão do Godot**: 4.3 ou superior
+*   **Versão do Godot**: 4.7.2
 *   **Formatos Suportados**: Exclusivamente **.tap** (Tape)
 
 ## Arquitetura Técnica

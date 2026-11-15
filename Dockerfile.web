@@ -1,4 +1,4 @@
-# Emscripten fixo na mesma versão dos export templates Web do Godot 4.6.2.
+# Emscripten fixo na mesma versão dos export templates Web do Godot 4.7.2.
 # Ao mudar de versão do Godot: exportar para Web, abrir no browser e ver na consola
 # "Build configuration: Emscripten X.Y.Z" — usar essa versão aqui.
 FROM emscripten/emsdk:4.0.20
